@@ -1,4 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var Game = require("./Game");
-var game = new Game();
+const Game_1 = require("./Game");
+console.log("Begin");
+var game = new Game_1.Game();
+game.Initialize();
+while (game.mIsRunning) {
+    game.RunLoop();
+}
+game.Stop();
