@@ -6,5 +6,6 @@ var game = new Game_1.Game();
 game.Initialize();
 while (game.mIsRunning) {
     game.RunLoop();
+    console.log("loop");
 }
 game.Stop();
