@@ -1,11 +1,14 @@
 import {Actor} from "../Actor";
 import {Game} from "../../Game";
+import Sprite from "../Sprite";
 
-export class Background extends Actor
+//Defined as the most deep layer of the drawing, it will cover all the background of the game,
+//and other layer of background, such as obstacles, decoration will be implemented as a sprite
+export class Background extends Sprite
 {
     constructor(game:Game)
     {
-        super(game,9999);
+        super(game,9999,["🌑","🌕","🌑","🌑"]);
         //this.count=0;
     }
 
@@ -16,6 +19,8 @@ export class Background extends Actor
     Draw(ctx: CanvasRenderingContext2D)
     {
         super.Draw(ctx);
+        ctx.font = '500px FontAwesome';
+        ctx.fillText(this.GetAssets()[0],500,500,1000);
     }
 
     //Variables

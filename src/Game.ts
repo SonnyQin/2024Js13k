@@ -112,9 +112,9 @@ export class Game
         return this.mContext;
     }
 
-    //TODO: Get load texture for each actor
+/*    //TODO: Get load texture for each actor
     public GetTexture(TextureName:string)
     {
 
-    }
+    }*/
 }
