@@ -45,3 +45,7 @@ export function rotatePoint(ptSrc:Vector2,ptRotationCenter:Vector2,angle:number)
 
     return new Vector2(rx, ry);
 }
+
+export const Sleep = (ms:number)=> {
+    return new Promise(resolve=>setTimeout(resolve, ms))
+}

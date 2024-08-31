@@ -1,32 +1,35 @@
 import {Game} from "../Game";
 import {Component} from "../Components/Component";
 import {Vector2} from "../Math";
+import Telegram from "../AI/Message/Telegram";
 
 export class Actor
 {
 
-    constructor(game:Game)
+    constructor(game:Game,drawOrder:number=1)
     {
         //Remember to initilize all variables
         this.mPosition=new Vector2(0,0);
         this.mRotation=0;
         this.mComponents=[];
         this.mGame=game;
+        this.mDrawOrder=drawOrder;
+        game.AddActor(this);
     }
     public AddComponent(component:Component):void
     {
-        for(let i=0;i<this.mComponents.length;i++)
+        let i=0;
+        for(;i<this.mComponents.length;i++)
         {
             if(this.mComponents[i].GetUpdateOrder()>component.GetUpdateOrder())
-            {
-                this.mComponents=this.mComponents.splice(i, 0, component);
-            }
+                break;
         }
+       this.mComponents.splice(i, 0, component);
     }
     public RemoveComponent(component:Component):void
     {
         //Need to be checked
-        this.mComponents=this.mComponents.filter((iter)=>iter!=component);
+        this.mComponents.filter((iter)=>iter!=component);
     }
     public Update(deltaTime:number):void
     {
@@ -34,7 +37,7 @@ export class Actor
         this.UpdateComponents(deltaTime);
     }
     //Virtual Function, determined by implementation
-    private UpdateActor(deltaTime:number):void
+    protected UpdateActor(deltaTime:number):void
     {
 
     }
@@ -47,7 +50,14 @@ export class Actor
     }
 
     //virtual
-    public Draw():void
+    public Draw(context:CanvasRenderingContext2D):void
+    {
+
+    }
+
+    //pure virtual
+    //TODO May Check for return
+    public HandleMessage(telegram:Telegram):boolean|void
     {
 
     }
@@ -57,6 +67,8 @@ export class Actor
     private mRotation:number;
     private mComponents:Component[];
     private mGame:Game;
+    //Painter's algorithm
+    private mDrawOrder:number;
 
     //Getter and Setter
     public SetPosition(vec:Vector2):void
@@ -75,5 +87,15 @@ export class Actor
     {
         return this.mRotation;
     }
-    
+
+    public GetDrawOrder():number
+    {
+        return this.mDrawOrder;
+    }
+
+    public SetDrawOrder(drawOrder:number):void
+    {
+        this.mDrawOrder=drawOrder;
+    }
+
 }
