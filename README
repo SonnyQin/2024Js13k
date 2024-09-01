@@ -3,3 +3,14 @@ items which labels 13's tracing. The game will have fog to render the scary atmo
 
 
 DrawOrder also means update order
+
+
+Speed detection: When players are in devil's range, detect the speed, to determine whether
+will the monster be active.
+
+Monsters may moving or not moving
+
+Monsters that will attack the player will have red 13 on it
+
+Monster's 13 sign may be blinking, means it will turn off for several seconds and appear
+then

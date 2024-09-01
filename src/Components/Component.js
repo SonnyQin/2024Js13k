@@ -7,10 +7,6 @@ class Component {
         this.mUpdateOrder = updateOrder;
     }
     //virtual
-    //TODO
-    ProcessInput() {
-    }
-    //virtual
     Update(deltaTime) {
     }
     //Getters and Setters
@@ -19,6 +15,9 @@ class Component {
     }
     SetUpdateOrder(updateOrder) {
         this.mUpdateOrder = updateOrder;
+    }
+    GetOwner() {
+        return this.mOwner;
     }
 }
 exports.Component = Component;

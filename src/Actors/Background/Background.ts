@@ -8,8 +8,7 @@ export class Background extends Sprite
 {
     constructor(game:Game)
     {
-        super(game,9999,["🌑","🌕","🌑","🌑"]);
-        //this.count=0;
+        super(game,9999);
     }
 
     UpdateActor(deltatime:number)
@@ -20,9 +19,8 @@ export class Background extends Sprite
     {
         super.Draw(ctx);
         ctx.font = '500px FontAwesome';
-        ctx.fillText(this.GetAssets()[0],500,500,1000);
+        ctx.fillText("🧝‍♀️",500,500,1000);
     }
 
     //Variables
-    //public count:number;
 }

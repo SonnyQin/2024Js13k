@@ -6,10 +6,10 @@ import Telegram from "../AI/Message/Telegram";
 export class Actor
 {
 
-    constructor(game:Game,drawOrder:number=1)
+    constructor(game:Game,drawOrder:number=1, position:Vector2)
     {
         //Remember to initilize all variables
-        this.mPosition=new Vector2(0,0);
+        this.mPosition=position;
         this.mRotation=0;
         this.mComponents=[];
         this.mGame=game;
@@ -64,6 +64,7 @@ export class Actor
 
     //Variables
     private mPosition:Vector2;
+    //TODO Might abandon this attribute
     private mRotation:number;
     private mComponents:Component[];
     private mGame:Game;

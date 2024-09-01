@@ -3,6 +3,7 @@ import { Background } from "./Actors/Background/Background";
 import {data} from "browserslist";
 import InputManager from "./InputManager";
 import MessageDispatcher from "./AI/Message/MessageDispatcher";
+import Player from "./Actors/Player";
 export class Game
 {
     constructor()
@@ -38,6 +39,7 @@ export class Game
 
 
         new Background(this);
+        this.mPlayer=new Player(this);
 
     }
 
@@ -55,7 +57,7 @@ export class Game
     }
     private ProcessInput():void
     {
-
+        this.mPlayer.ProcessInput(this.mInputManager);
     }
     private UpdateGame():void
     {
@@ -89,6 +91,9 @@ export class Game
     //Canvas context
     private mContext:CanvasRenderingContext2D;
     private mInputManager:InputManager;
+    // @ts-ignore
+    private mPlayer:Player;
+
 //Functions about actors
     //TODO Optimization
     AddActor(actor:Actor):void

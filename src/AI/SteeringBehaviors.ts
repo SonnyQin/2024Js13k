@@ -7,6 +7,7 @@ export enum BehaviorTypes
 }
 
 //TODO May implement more behaviors
+//TODO May change some behaviors to make the devils looks funny when moving
 export default class SteeringBehaviors
 {
     constructor(owner:Actor)

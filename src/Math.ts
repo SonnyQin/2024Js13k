@@ -13,6 +13,16 @@ export class Vector2
     {
         return vec.x*this.x+vec.y*this.y;
     }
+
+    public Length():number
+    {
+
+    }
+
+    public LengthSq():number
+    {
+
+    }
 }
 export function Random(m:number, n:number)
 {

@@ -8,12 +8,6 @@ export class Component
         this.mUpdateOrder=updateOrder;
     }
     //virtual
-    //TODO
-    ProcessInput():void
-    {
-
-    }
-    //virtual
     Update(deltaTime:number):void
     {
 
@@ -32,5 +26,10 @@ export class Component
     public SetUpdateOrder(updateOrder:number):void
     {
         this.mUpdateOrder=updateOrder;
+    }
+
+    public GetOwner():Actor
+    {
+        return this.mOwner;
     }
 }
