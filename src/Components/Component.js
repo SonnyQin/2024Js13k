@@ -5,6 +5,7 @@ class Component {
     constructor(actor, updateOrder = 100) {
         this.mOwner = actor;
         this.mUpdateOrder = updateOrder;
+        actor.AddComponent(this);
     }
     //virtual
     Update(deltaTime) {

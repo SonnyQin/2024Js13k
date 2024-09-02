@@ -7,7 +7,7 @@ export default class MovementComponent extends Component
     constructor(actor:Actor, updateOrder:number=100)
     {
         super(actor,updateOrder);
-        this.mMaxSpeedSq=10000;
+        this.mMaxSpeed=100;
         this.mForwardSpeed=new Vector2(0,0);
     }
     
@@ -15,28 +15,32 @@ export default class MovementComponent extends Component
     {
         super.Update(deltaTime);
         let pos=this.GetOwner().GetPosition();
-        pos.x+=this.mForwardSpeed.x;
-        pos.y+=this.mForwardSpeed.y;
+        pos.AddVec(this.mForwardSpeed.Multiply(deltaTime));
     }
 
     //Variables
     //hard code
-    private mMaxSpeedSq:number;
+    private mMaxSpeed:number;
     private mForwardSpeed:Vector2;
 
     public SetForwardSpeed(speed:Vector2):void
     {
-        if(speed.LengthSq()<this.mMaxSpeedSq)
+        if(speed.LengthSq()<this.mMaxSpeed*this.mMaxSpeed)
             this.mForwardSpeed=speed;
         else
-            this.mForwardSpeed=
+        {
+            this.mForwardSpeed=speed.Normalize().Multiply(this.mMaxSpeed);
+        }
     }
     public GetForwardSpeed():Vector2
     {
         return this.mForwardSpeed;
     }
-    public static CalculateForwardSpeed(mousepos:Vector2):Vector2
+    public CalculateForwardSpeed(mousepos:Vector2):Vector2
     {
-
+        let length=mousepos.MinusVec(this.GetOwner().GetPosition()).Length();
+        if(length<30)
+            return new Vector2();
+        return mousepos.Normalize().Multiply(length/200*this.mMaxSpeed);
     }
 }

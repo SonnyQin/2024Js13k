@@ -26,8 +26,8 @@ export class Game
             console.log("Unable to create Canvas");
             return;
         }
-        Canvas.width=window.innerWidth;
-        Canvas.height=window.innerHeight;
+        this.mCanvasWidth=Canvas.width=window.innerWidth;
+        this.mCanvasHeight=Canvas.height=window.innerHeight;
         document.body.appendChild(Canvas);
         // @ts-ignore
         this.mContext=Canvas.getContext('2d');
@@ -57,6 +57,7 @@ export class Game
     }
     private ProcessInput():void
     {
+        console.log(this.mInputManager.GetMouseVec());
         this.mPlayer.ProcessInput(this.mInputManager);
     }
     private UpdateGame():void
@@ -78,12 +79,18 @@ export class Game
     }
     private GenerateOutput():void
     {
+        this.mContext.beginPath();
+        this.mContext.clearRect(0,0,this.mCanvasWidth,this.mCanvasHeight);
         for(let iter of this.mActors)
         {
             iter.Draw(this.mContext);
         }
     }
     //Variables
+    // @ts-ignore
+    private mCanvasHeight:number;
+    // @ts-ignore
+    private mCanvasWidth:number;
     private mTickCount:number;
     public mIsRunning:boolean;
     //Sorted by Drawing Order

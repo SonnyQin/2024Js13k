@@ -14,14 +14,50 @@ export class Vector2
         return vec.x*this.x+vec.y*this.y;
     }
 
+    public Normalize():Vector2
+    {
+        return new Vector2(this.x/this.Length(),this.y/this.Length());
+    }
     public Length():number
     {
-
+        return Math.sqrt(this.LengthSq());
     }
 
     public LengthSq():number
     {
+        return this.x*this.x+this.y*this.y;
+    }
+    public AddNum(num:number):Vector2
+    {
+        this.x+=num;
+        this.y+=num;
+        return this;
+    }
+    public AddVec(vec:Vector2):Vector2
+    {
+        this.x+=vec.x;
+        this.y+=vec.y;
+        return this;
+    }
+    public Multiply(num:number):Vector2
+    {
+        this.x*=num;
+        this.y*=num;
+        return this;
+    }
 
+    public MinusNum(num:number):Vector2
+    {
+        this.x-=num;
+        this.y-=num;
+        return this;
+    }
+
+    public MinusVec(vec:Vector2):Vector2
+    {
+        this.x-=vec.x;
+        this.y-=vec.y;
+        return this;
     }
 }
 export function Random(m:number, n:number)

@@ -1,6 +1,7 @@
 import {Actor} from "../Actor";
 import {Game} from "../../Game";
 import Sprite from "../Sprite";
+import {Vector2} from "../../Math";
 
 //Defined as the most deep layer of the drawing, it will cover all the background of the game,
 //and other layer of background, such as obstacles, decoration will be implemented as a sprite
@@ -8,7 +9,7 @@ export class Background extends Sprite
 {
     constructor(game:Game)
     {
-        super(game,9999);
+        super(game,9999,new Vector2(0,0));
     }
 
     UpdateActor(deltatime:number)
@@ -19,7 +20,7 @@ export class Background extends Sprite
     {
         super.Draw(ctx);
         ctx.font = '500px FontAwesome';
-        ctx.fillText("🧝‍♀️",500,500,1000);
+        //ctx.fillText("🧝‍♀️",500,500,1000);
     }
 
     //Variables

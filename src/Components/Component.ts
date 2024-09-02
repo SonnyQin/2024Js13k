@@ -6,6 +6,7 @@ export class Component
     {
         this.mOwner=actor;
         this.mUpdateOrder=updateOrder;
+        actor.AddComponent(this);
     }
     //virtual
     Update(deltaTime:number):void
