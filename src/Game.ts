@@ -15,7 +15,7 @@ export class Game
         this.mActors=[];
         // @ts-ignore
         this.mContext=null;
-        this.mInputManager=new InputManager();
+        //this.mInputManager=new InputManager();
     }
 
     public Initialize():void
@@ -39,11 +39,12 @@ export class Game
             return;
         }
 
+        InputManager.Instance;
+
 
         new Background(this);
         this.mPlayer=new Player(this);
         new Clock(this,1,new Vector2(100,100),1.0,true);
-
 
     }
 
@@ -61,7 +62,7 @@ export class Game
     }
     private ProcessInput():void
     {
-        this.mPlayer.ProcessInput(this.mInputManager);
+        this.mPlayer.ProcessInput(InputManager.Instance);
     }
     private UpdateGame():void
     {
@@ -100,7 +101,7 @@ export class Game
     private mActors:Actor[];
     //Canvas context
     private mContext:CanvasRenderingContext2D;
-    private mInputManager:InputManager;
+    //private mInputManager:InputManager;
     // @ts-ignore
     private mPlayer:Player;
 

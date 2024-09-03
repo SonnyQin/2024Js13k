@@ -27,13 +27,16 @@ Monster may wander around if the target is lost
 
 
 PlayerState
-😀- no monster around
-😨- player is near the monster
-😱- the monster begin to pursuit, the monster will show the red 13
-🥵- tired after being pursuit by the monster for a long time//normal
-🥶- relief after being pursuit//normal
+😀- no monster around -1 tired
+😨- player is near the monster +0.5 tired
+😱- the monster begin to pursuit, the monster will show the red 13 +speed +1 tired
+🥵- tired after being pursuit by the monster for a long time//normal -speed -1tired
+🥶- relief after being pursuit//normal - speed -1 tired
 🥳- player win the game
 😭- player lose the game
+
+tired threhold- beyond this level, change into tired
+tiredMaxx- the most tiredness can accumulate
 
 //Hard code Set up
         this.mAssets={"😃":79,"🥵":79,"🥶":79,"🥳":79,"😱":79,"😖":79};

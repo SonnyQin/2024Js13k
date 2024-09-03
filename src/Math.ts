@@ -132,3 +132,22 @@ export function rotatePoint(ptSrc:Vector2,ptRotationCenter:Vector2,angle:number)
 export const Sleep = (ms:number)=> {
     return new Promise(resolve=>setTimeout(resolve, ms))
 }
+
+export class Zone
+{
+    constructor(upleft:Vector2=new Vector2(), downright:Vector2=new Vector2())
+    {
+        this.UpLeft=upleft;
+        this.DownRight=downright;
+    }
+
+    //Use canvas coordinates
+    public Inside(vec:Vector2):boolean
+    {
+        return vec.x > this.UpLeft.x && vec.x < this.DownRight.x && vec.y > this.UpLeft.y && vec.y < this.DownRight.y;
+
+    }
+
+    public UpLeft:Vector2;
+    public DownRight:Vector2;
+}

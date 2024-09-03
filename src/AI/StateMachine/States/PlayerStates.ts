@@ -2,6 +2,7 @@ import Player from "../../../Actors/Player";
 import State from "./State";
 import Telegram from "../../Message/Telegram";
 import {MessageType} from "../../Message/MessageType";
+import {paras} from "../../../Parameters";
 
 export default class PlayerGlobalState extends State<Player>
 {
@@ -34,6 +35,11 @@ export default class PlayerGlobalState extends State<Player>
             case MessageType.PM_ESCAPE:
                 owner.GetFSM().ChangeState(PSEscape.Instance);
                 return true;
+            case MessageType.PM_WIN:
+                owner.GetFSM().ChangeState(PSWIN.Instance);
+                return true;
+            case MessageType.PM_LOSE:
+                owner.GetFSM().ChangeState(PSLOSE.Instance);
         }
         return false;
     }
@@ -68,7 +74,10 @@ export class PSNormal extends State<Player>
 
     Execute(owner: Player)
     {
-
+        if(owner.GetTiredness()>paras.MaxTiredness)
+        {
+            owner.GetFSM().ChangeState(PSTired.Instance);
+        }
     }
 
     Exit(owner: Player)
