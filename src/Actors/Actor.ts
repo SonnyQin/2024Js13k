@@ -3,6 +3,14 @@ import {Component} from "../Components/Component";
 import {Vector2} from "../Math";
 import Telegram from "../AI/Message/Telegram";
 
+export enum Type
+{
+    Actor,
+    Player,
+    Monster,
+}
+
+
 export class Actor
 {
 
@@ -14,6 +22,9 @@ export class Actor
         this.mComponents=[];
         this.mGame=game;
         this.mDrawOrder=drawOrder;
+        this.mType=Type.Actor;
+        this.mHeading=new Vector2();
+        this.mGame=game;
         game.AddActor(this);
     }
     public AddComponent(component:Component):void
@@ -66,10 +77,12 @@ export class Actor
     private mPosition:Vector2;
     //TODO Might abandon this attribute
     private mRotation:number;
+    private mHeading:Vector2;
     private mComponents:Component[];
     private mGame:Game;
     //Painter's algorithm
     private mDrawOrder:number;
+    private mType:Type;
 
     //Getter and Setter
     public SetPosition(vec:Vector2):void
@@ -99,4 +112,28 @@ export class Actor
         this.mDrawOrder=drawOrder;
     }
 
+    public GetType():Type
+    {
+        return this.mType;
+    }
+
+    public SetType(type:Type):void
+    {
+        this.mType=type;
+    }
+    
+    public GetGame():Game
+    {
+        return this.mGame;
+    }
+
+    public GetHeading():Vector2
+    {
+        return this.mHeading;
+    }
+
+    public SetHeading(heading:Vector2)
+    {
+        this.mHeading=heading;
+    }
 }

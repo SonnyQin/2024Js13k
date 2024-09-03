@@ -9,26 +9,38 @@ export default class Clock extends MonsterBase
     constructor(game:Game,drawOrder:number=1, pos:Vector2,scale:number,isEvil:boolean)
     {
         super(game, drawOrder, pos,scale, isEvil);
-        this.mAssets={"🌑":79,"🌒":79,"🌓":79,"🌔":79,"🌕":79,"🌖":79,"🌗":79,
-            "🌘":79};
-        this.mDisplayTime=Random(1,3);
-        this.mHideTime=Random(1,1.5);
-        this.mIsHide=false;
+        this.mSize=97;
+        this.mImages=["🌑","🌒","🌓","🌔","🌕","🌖","🌗","🌘"];
+        this.mDisplayTime=Random(1000,3000);
+        this.mLastFrameTime=Date.now();
+        this.count=0;
     }
 
     //
     protected UpdateActor(deltaTime: number)
     {
-        super.UpdateActor(deltaTime);
+        if(Date.now()-this.mLastFrameTime>this.mDisplayTime)
+        {
+            this.count++;
+            this.mLastFrameTime=Date.now();
+            if(this.count>=Object.keys(this.mImages).length)
+                this.count=0;
+        }
     }
 
     public Draw(context: CanvasRenderingContext2D)
     {
+        let image=this.mImages[this.count];
+        this.DrawImage(context,image,this.mSize);
+
+        //Draw the Red Thirteen After drawing the image
         super.Draw(context);
     }
 
     //Variables
     private mDisplayTime:number;
-    private mHideTime:number;
-    private mIsHide:boolean;
+    private count:number;
+    private mLastFrameTime:number;
+    private mImages:string[];
+    private mSize:number;
 }

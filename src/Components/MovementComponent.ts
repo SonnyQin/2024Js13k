@@ -4,16 +4,17 @@ import {Vector2} from "../Math";
 
 export default class MovementComponent extends Component
 {
-    constructor(actor:Actor, updateOrder:number=100)
+    constructor(actor:Actor, updateOrder:number=100, maxSpeed:number=100)
     {
         super(actor,updateOrder);
-        this.mMaxSpeed=100;
+        this.mMaxSpeed=maxSpeed;
         this.mForwardSpeed=new Vector2(0,0);
     }
     
     public Update(deltaTime: number)
     {
         super.Update(deltaTime);
+        //TODO
         let pos=this.GetOwner().GetPosition();
         pos.AddVec(this.mForwardSpeed.Multiply(deltaTime));
     }
@@ -36,9 +37,15 @@ export default class MovementComponent extends Component
     {
         return this.mForwardSpeed;
     }
+
+    public GetMaxSpeed():number
+    {
+        return this.mMaxSpeed;
+    }
     public CalculateForwardSpeed(mousepos:Vector2):Vector2
     {
         let length=mousepos.MinusVec(this.GetOwner().GetPosition()).Length();
+        this.GetOwner().SetHeading(mousepos.Normalize());
         if(length<30)
             return new Vector2();
         return mousepos.Normalize().Multiply(length/200*this.mMaxSpeed);

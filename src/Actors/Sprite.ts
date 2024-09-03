@@ -33,7 +33,6 @@ export default class Sprite extends Actor
     //If the sprite has extra image, implemented in the derived class(hard code)
     Draw(context: CanvasRenderingContext2D)
     {
-        super.Draw(context);
         if(Object.keys(this.mAssets).length==1)
         {
             let image=Object.keys(this.mAssets)[0];
@@ -43,12 +42,14 @@ export default class Sprite extends Actor
         }
     }
 
+    //Virtual
     public HandleMessage(telegram: Telegram): boolean | void
     {
-        return super.HandleMessage(telegram);
+
     }
 
     //Remeber to hard code in derived class
+    //May be different in different class
     //Image and its size
     protected mAssets:{[key: string]: number}
     //The stretch of image

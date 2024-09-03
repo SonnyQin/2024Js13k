@@ -14,3 +14,26 @@ Monsters that will attack the player will have red 13 on it
 
 Monster's 13 sign may be blinking, means it will turn off for several seconds and appear
 then
+
+The setting above may be changed
+alternatively, using the emojis to determine whether monsters are around, the red thirteen will appear only in
+the pursuiting range of the monster
+I prefer the second one
+
+Monster may have lifespan
+
+
+Monster may wander around if the target is lost
+
+
+PlayerState
+😀- no monster around
+😨- player is near the monster
+😱- the monster begin to pursuit, the monster will show the red 13
+🥵- tired after being pursuit by the monster for a long time//normal
+🥶- relief after being pursuit//normal
+🥳- player win the game
+😭- player lose the game
+
+//Hard code Set up
+        this.mAssets={"😃":79,"🥵":79,"🥶":79,"🥳":79,"😱":79,"😖":79};

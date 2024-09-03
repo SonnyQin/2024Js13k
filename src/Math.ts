@@ -46,20 +46,57 @@ export class Vector2
         return this;
     }
 
-    public MinusNum(num:number):Vector2
-    {
-        this.x-=num;
-        this.y-=num;
-        return this;
-    }
-
     public MinusVec(vec:Vector2):Vector2
     {
         this.x-=vec.x;
         this.y-=vec.y;
         return this;
     }
+
+    public DisToSq(vec:Vector2):number
+    {
+        let v=new Vector2(this.x-vec.x, this.y-vec.y);
+        return v.LengthSq();
+    }
+
+    public DisTo(vec:Vector2):number
+    {
+        return Math.sqrt(this.DisToSq(vec));
+    }
 }
+
+export function VaV(a:Vector2, b:Vector2)
+{
+    return new Vector2(a.x+b.x,a.y+b.y);
+}
+
+export function VaN(a:Vector2, b:number)
+{
+    return new Vector2(a.x+b,a.y+b);
+}
+
+export function VmiV(a:Vector2, b:Vector2)
+{
+    return new Vector2(a.x-b.x,a.y-b.y);
+}
+
+export function VmiN(a:Vector2, b:number)
+{
+    return new Vector2(a.x-b,a.y-b);
+}
+
+export function VmV(a:Vector2, b:Vector2)
+{
+    return new Vector2(a.x*b.x, a.y*b.y);
+}
+
+export function VmN(a:Vector2, b:number)
+{
+    return new Vector2(a.x*b, a.y*b);
+}
+
+
+
 export function Random(m:number, n:number)
 {
     return Math.random()*(m-n)+n;

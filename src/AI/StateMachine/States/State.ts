@@ -1,4 +1,6 @@
 //Pure virtual
+import Telegram from "../../Message/Telegram";
+
 export default class State<EntityType>
 {
     constructor()
@@ -8,5 +10,5 @@ export default class State<EntityType>
     public Execute(owner:EntityType|null):void{if(!owner)return;}
     public Exit(owner:EntityType|null):void{if(!owner)return;}
     //virtual
-    public OnMessage(owner:EntityType|null):boolean|void{if(!owner)return false;}
+    public OnMessage(owner:EntityType|null, msg:Telegram):boolean|void{if(!owner)return false;}
 }

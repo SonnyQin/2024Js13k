@@ -4,6 +4,8 @@ import {data} from "browserslist";
 import InputManager from "./InputManager";
 import MessageDispatcher from "./AI/Message/MessageDispatcher";
 import Player from "./Actors/Player";
+import Clock from "./Actors/Monsters/Clock";
+import {Vector2} from "./Math";
 export class Game
 {
     constructor()
@@ -40,6 +42,8 @@ export class Game
 
         new Background(this);
         this.mPlayer=new Player(this);
+        new Clock(this,1,new Vector2(100,100),1.0,true);
+
 
     }
 
@@ -57,7 +61,6 @@ export class Game
     }
     private ProcessInput():void
     {
-        console.log(this.mInputManager.GetMouseVec());
         this.mPlayer.ProcessInput(this.mInputManager);
     }
     private UpdateGame():void
@@ -124,9 +127,8 @@ export class Game
         return this.mContext;
     }
 
-/*    //TODO: Get load texture for each actor
-    public GetTexture(TextureName:string)
+    public GetActors():Actor[]
     {
-
-    }*/
+        return this.mActors;
+    }
 }

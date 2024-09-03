@@ -1,10 +1,11 @@
 import State from "./States/State";
+import Telegram from "../Message/Telegram";
 
 export default class StateMachine<EntityType>
 {
-    constructor()
+    constructor(owner:EntityType)
     {
-        this.pOwner=null;
+        this.pOwner=owner;
         this.mCurrentState=null;
         this.mPreviousState=null;
         this.mGlobalState=null;
@@ -60,6 +61,15 @@ export default class StateMachine<EntityType>
             this.mGlobalState.Execute(this.pOwner);
         if(this.mCurrentState)
             this.mCurrentState.Execute(this.pOwner);
+    }
+
+    public HandleMessage(telegram:Telegram):boolean
+    {
+        if(this.mCurrentState&&this.mCurrentState.OnMessage(this.pOwner, telegram))
+            return true;
+        if(this.mGlobalState&&this.mGlobalState.OnMessage(this.pOwner, telegram))
+            return true;
+        return false;
     }
 
     //Might Have Problem
