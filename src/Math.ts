@@ -63,6 +63,21 @@ export class Vector2
     {
         return Math.sqrt(this.DisToSq(vec));
     }
+
+    public Copy()
+    {
+        return new Vector2(this.x, this.y);
+    }
+
+    public Truncate(maxForce:number):void
+    {
+        if(this.Length()>maxForce)
+        {
+            let r=this.Normalize();
+            this.x=r.x*maxForce;
+            this.y=r.y*maxForce;
+        }
+    }
 }
 
 export function VaV(a:Vector2, b:Vector2)
@@ -93,6 +108,11 @@ export function VmV(a:Vector2, b:Vector2)
 export function VmN(a:Vector2, b:number)
 {
     return new Vector2(a.x*b, a.y*b);
+}
+
+export function VdN(a:Vector2, b:number)
+{
+    return new Vector2(a.x/b, a.y/b);
 }
 
 
@@ -138,10 +158,17 @@ export const Sleep = (ms:number)=> {
 
 export class Zone
 {
-    constructor(upleft:Vector2=new Vector2(), downright:Vector2=new Vector2())
+/*    constructor(upleft:Vector2=new Vector2(), downright:Vector2=new Vector2())
     {
         this.UpLeft=upleft;
         this.DownRight=downright;
+    }*/
+
+    constructor(position:Vector2=new Vector2(), width:number, length:number)
+    {
+        this.mPosition=position;
+        this.mWidth=width;
+        this.mLength=length;
     }
 
     //Use canvas coordinates
@@ -151,6 +178,51 @@ export class Zone
 
     }
 
+    public IntersectZone(b:Zone):boolean
+    {
+        return this.DownRight.x>b.UpLeft.x&&this.UpLeft.x<b.DownRight.x&&this.DownRight.y>b.UpLeft.y&&this.UpLeft.y<b.DownRight.y;
+    }
+
+   /* //Min
     public UpLeft:Vector2;
-    public DownRight:Vector2;
+    //Max
+    public DownRight:Vector2;*/
+
+    public mPosition:Vector2;
+    public mWidth:number;
+    public mLength:number;
+
+    get DownRight()
+    {
+        return new Vector2(this.mPosition.x+this.mWidth/2, this.mPosition.y+this.mLength/2);
+    }
+
+    get UpLeft()
+    {
+        return new Vector2(this.mPosition.x-this.mWidth/2, this.mPosition.y-this.mLength/2);
+    }
+}
+
+export class CircleCollider
+{
+    constructor(pos:Vector2, length:number)
+    {
+        this.mPosition=pos;
+        this.mLength=length;
+    }
+
+    public IntersectCircleCollider(b:CircleCollider):boolean
+    {
+        return this.mPosition.DisToSq(b.mPosition) < (this.mLength + b.mLength) * (this.mLength + b.mLength);
+
+    }
+
+    public mPosition:Vector2;
+    public mLength:number;
+
+}
+
+export function GetAngle(vec:Vector2)
+{
+
 }

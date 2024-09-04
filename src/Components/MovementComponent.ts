@@ -44,10 +44,11 @@ export default class MovementComponent extends Component
     }
     public CalculateForwardSpeed(mousepos:Vector2):Vector2
     {
-        let length=mousepos.MinusVec(this.GetOwner().GetPosition()).Length();
-        this.GetOwner().SetHeading(mousepos.Normalize());
+        let worldMousepos=this.GetOwner().GetGame().GetCamera().ReverseTransform(mousepos);
+        let length=worldMousepos.MinusVec(this.GetOwner().GetPosition()).Length();
+        this.GetOwner().SetHeading(worldMousepos.Normalize());
         if(length<30)
             return new Vector2();
-        return mousepos.Normalize().Multiply(length/200*this.mMaxSpeed);
+        return worldMousepos.Normalize().Multiply(length/200*this.mMaxSpeed);
     }
 }

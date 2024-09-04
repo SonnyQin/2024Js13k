@@ -1,8 +1,7 @@
-import {Actor} from "../Actor";
+import {Type} from "../Actor";
 import {Game} from "../../Game";
 import Sprite from "../Sprite";
 import {Vector2} from "../../Math";
-import InputManager from "../../InputManager";
 import {paras} from "../../Parameters";
 
 //Defined as the most deep layer of the drawing, it will cover all the background of the game,
@@ -13,6 +12,7 @@ export class Background extends Sprite
     {
         super(game,-1,new Vector2(0,0));
         this.mMap=map;
+        this.SetType(Type.Terrain);
     }
 
     UpdateActor(deltatime:number)
@@ -21,25 +21,34 @@ export class Background extends Sprite
     }
     Draw(ctx: CanvasRenderingContext2D)
     {
+        //Maze's start position in world always be 0,0
+        let cur=this.GetGame().GetCamera().TransformToView(new Vector2(0,0));
+        let curx=cur.x;
+        let cury=cur.y;
 
-        let curx=0;
-        let cury=0;
         for(let r of this.mMap)
         {
             for(let c of r)
             {
-                if(c==0)
+                switch (c)
                 {
-                    ctx.fillStyle='grey';
-                }
-                else
-                {
-                    ctx.fillStyle='red';
+                    case 0:
+                        ctx.fillStyle='grey';
+                        break;
+                    case 1:
+                        ctx.fillStyle='red';
+                        break;
+                    case 3:
+                        ctx.fillStyle='blue';
+                        break;
+                    case 4:
+                        ctx.fillStyle='yellow';
+                        break;
                 }
                 ctx.fillRect(curx, cury, paras.blocklength, paras.blocklength);
                 curx+=paras.blocklength;
             }
-            curx=0;
+            curx=cur.x;
             cury+=paras.blocklength;
         }
     }

@@ -8,7 +8,7 @@ export default class Button extends Element
     {
         super(owner, pos);
         let self=this;
-        this.mZone=new Zone(new Vector2(pos.x-width/2,pos.y-length/2), new Vector2(pos.x+width/2, pos.y+length/2));
+        this.mZone=new Zone(pos, width, length);
     }
 
     public Update()

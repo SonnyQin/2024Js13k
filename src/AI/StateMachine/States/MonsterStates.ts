@@ -10,8 +10,9 @@ export default class MonsterGlobalState extends State<MonsterBase>
         super();
     }
 
-    Enter(owner: MonsterBase) {
-
+    Enter(owner: MonsterBase)
+    {
+        owner.GetSteering().SeekOn();
     }
 
 
@@ -20,7 +21,10 @@ export default class MonsterGlobalState extends State<MonsterBase>
         switch (msg.mMsg)
         {
             case MessageType.MM_PERSUIT:
-                owner.GetFSM().ChangeState(MSPursuiting.Instance);
+                if(!owner.GetFSM().isInState(MSPursuiting.Instance))
+                {
+                    owner.GetFSM().ChangeState(MSPursuiting.Instance);
+                }
                 return true;
         }
         return false;
@@ -59,6 +63,22 @@ export class MSPursuiting extends State<MonsterBase>
         super();
     }
 
+    Enter(owner: MonsterBase)
+    {
+        owner.GetSteering().PursuitOn();
+    }
+
+    Execute(owner: MonsterBase)
+    {
+
+    }
+
+    Exit(owner: MonsterBase)
+    {
+        owner.GetSteering().PursuitOff();
+    }
+
+
     static get Instance()
     {
         if(!this._Instance)
@@ -85,7 +105,7 @@ export class MSAttacking extends State<MonsterBase>
     private static _Instance:MSAttacking;
 }
 
-export class MSTargetLost extends State<MonsterBase>
+export class MSWandering extends State<MonsterBase>
 {
     constructor() {
         super();
@@ -98,5 +118,5 @@ export class MSTargetLost extends State<MonsterBase>
         return this._Instance;
     }
 
-    private static _Instance:MSTargetLost;
+    private static _Instance:MSWandering;
 }

@@ -23,20 +23,20 @@ export default class SenseComponent extends Component
                 if(dis<this.mDangerDis)
                 {
                     //Change State to escape
-                    MessageDispatcher.Instance.DispatchMsg(0,this.GetOwner(), this.GetOwner(), MessageType.PM_ESCAPE, null);
+                    MessageDispatcher.Instance.DispatchMsg(0,this.GetOwner(), this.GetOwner(), MessageType.PM_ESCAPE);
 
                     //Ask monster to pursuit
-                    MessageDispatcher.Instance.DispatchMsg(0.5,this.GetOwner(),actor,MessageType.MM_PERSUIT,null);
+                    MessageDispatcher.Instance.DispatchMsg(0.5,this.GetOwner(),actor,MessageType.MM_PERSUIT);
                 }
                 else
                     if(dis<this.mAlertDis)
                     {
                         //Change State to escape
-                        MessageDispatcher.Instance.DispatchMsg(0,this.GetOwner(), this.GetOwner() , MessageType.PM_ALERT, null );
+                        MessageDispatcher.Instance.DispatchMsg(0,this.GetOwner(), this.GetOwner() , MessageType.PM_ALERT);
                     }
                     else
                     {
-                        MessageDispatcher.Instance.DispatchMsg(0,this.GetOwner(), this.GetOwner(), MessageType.PM_NORMAL,null);
+                        MessageDispatcher.Instance.DispatchMsg(0,this.GetOwner(), this.GetOwner(), MessageType.PM_NORMAL);
                     }
             }
         }

@@ -10,4 +10,13 @@ export default class MonsterGenerator
     {
 
     }
+
+    static get Instance()
+    {
+        if(!this._Instance)
+            this._Instance=new this();
+        return this._Instance;
+    }
+
+    private static _Instance:MonsterGenerator;
 }

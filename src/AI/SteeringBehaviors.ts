@@ -3,6 +3,7 @@ import {Actor} from "../Actors/Actor";
 import Player from "../Actors/Player";
 import now from "performance-now";
 import MonsterBase from "../Actors/Monsters/MonsterBase";
+import {paras} from "../Parameters";
 
 export enum BehaviorTypes
 {
@@ -20,7 +21,7 @@ export default class SteeringBehaviors
     {
         this.mOwner=owner;
         this.mSteeringForce=new Vector2();
-        this.mTarget=null;
+        this.mTarget=owner.GetGame().GetPlayer();
         this.mFlag=BehaviorTypes.none;
         this.mTargetPos=new Vector2();
         this.MaxForce=1000;
@@ -40,14 +41,22 @@ export default class SteeringBehaviors
         this.mOwner.SetHeading(VmiV(evader.GetPosition(),this.mOwner.GetPosition()).Normalize());
 
         let RelativeHeading=this.mOwner.GetHeading().Dot(evader.GetHeading());
-
-        if(ToEvader.Dot(this.mOwner.GetHeading())>0&&RelativeHeading<-0.95)
+        if ( (ToEvader.Dot(this.mOwner.GetHeading()) > 0) &&
+            (RelativeHeading < -0.95))  //acos(0.95)=18 degs
         {
             return this.Seek(evader.GetPosition());
         }
 
-        let LookAheadTime=ToEvader.Length()/(this.mOwner.GetMaxSpeed()+evader.GetSpeed());
-        return this.Seek(VaV(evader.GetPosition(),VmN(evader.GetVelocity(), LookAheadTime)));
+
+
+        let LookAheadTime=0;
+        if(evader.GetSpeed()!=0)
+        {
+            LookAheadTime=ToEvader.Length()/evader.GetSpeed();
+        }
+        //LookAheadTime*Player.Velocity+Player.pos
+        this.mTargetPos=VaV(VmN(evader.GetVelocity(),LookAheadTime),evader.GetPosition());
+        return this.Seek(this.mTargetPos);
     }
 
     public On(bt:BehaviorTypes):boolean
@@ -56,7 +65,7 @@ export default class SteeringBehaviors
     }
 
     public SeekOn(){this.mFlag |= BehaviorTypes.seek;}
-    public PursuitOn(t:Player){this.mFlag |= BehaviorTypes.pursuit; this.mTarget = t;}
+    public PursuitOn(){this.mFlag |= BehaviorTypes.pursuit;}
 
 
 
@@ -99,6 +108,13 @@ export default class SteeringBehaviors
             force.AddVec(this.Pursuit(this.mTarget))
             if (!this.AccumulateForce(this.mSteeringForce, force)) return this.mSteeringForce;
         }
+        return this.mSteeringForce;
+    }
+
+    public Calculate()
+    {
+        this.mSteeringForce=this.SumForces();
+        this.mSteeringForce.Truncate(paras.MonsterMaxForce);
         return this.mSteeringForce;
     }
 

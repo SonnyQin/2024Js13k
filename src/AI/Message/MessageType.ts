@@ -11,5 +11,6 @@ export enum MessageType
     MM_ALERT,
     MM_PERSUIT,
     MM_ATTACK,
+    CM_COLLIDE,
 
 }

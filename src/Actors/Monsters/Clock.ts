@@ -2,6 +2,7 @@ import MonsterBase from "./MonsterBase";
 import {Game} from "../../Game";
 import {Random, Vector2} from "../../Math";
 import State from "../../AI/StateMachine/States/State";
+import {paras} from "../../Parameters";
 
 //A base for mosters that changing its image
 export default class Clock extends MonsterBase
@@ -9,7 +10,7 @@ export default class Clock extends MonsterBase
     constructor(game:Game,drawOrder:number=1, pos:Vector2,scale:number,isEvil:boolean)
     {
         super(game, drawOrder, pos,scale, isEvil);
-        this.mSize=97;
+        this.mSize=paras.ClockSize;
         this.mImages=["🌑","🌒","🌓","🌔","🌕","🌖","🌗","🌘"];
         this.mDisplayTime=Random(1000,3000);
         this.mLastFrameTime=Date.now();

@@ -8,6 +8,7 @@ export enum Type
     Actor,
     Player,
     Monster,
+    Terrain,
 }
 
 
@@ -25,6 +26,7 @@ export class Actor
         this.mType=Type.Actor;
         this.mHeading=new Vector2();
         this.mGame=game;
+        this.mIsTagged=false;
         game.AddActor(this);
     }
     public AddComponent(component:Component):void
@@ -73,6 +75,11 @@ export class Actor
 
     }
 
+    public TransformToView()
+    {
+        return this.GetGame().GetCamera().TransformToView(this.GetPosition());
+    }
+
     //Variables
     private mPosition:Vector2;
     //TODO Might abandon this attribute
@@ -83,6 +90,7 @@ export class Actor
     //Painter's algorithm
     private mDrawOrder:number;
     private mType:Type;
+    private mIsTagged:boolean;
 
     //Getter and Setter
     public SetPosition(vec:Vector2):void
@@ -135,5 +143,15 @@ export class Actor
     public SetHeading(heading:Vector2)
     {
         this.mHeading=heading;
+    }
+
+    public GetTag()
+    {
+        return this.mIsTagged;
+    }
+
+    public SetTag(tag:boolean)
+    {
+        this.mIsTagged=tag;
     }
 }

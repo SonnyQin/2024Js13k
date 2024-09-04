@@ -1,4 +1,4 @@
-import {Vector2, VmiV} from "../Math";
+import {VaV, Vector2, VmiV} from "../Math";
 import {Game} from "../Game";
 
 export default class Camera
@@ -11,7 +11,12 @@ export default class Camera
 
     public TransformToView(vec:Vector2)
     {
-        return VmiV(vec, this.mCameraPos);
+        return VaV(VmiV(vec, this.mCameraPos), new Vector2(this.mGame.GetCanvasWidth()/2, this.mGame.GetCanvasHeight()/2)) ;
+    }
+
+    public ReverseTransform(vec:Vector2)
+    {
+        return VaV(vec, VmiV(this.mCameraPos, new Vector2(this.mGame.GetCanvasWidth()/2, this.mGame.GetCanvasHeight()/2)));
     }
 
     private mCameraPos:Vector2;

@@ -1,4 +1,5 @@
-import {Random, RandomInt} from "../../Math";
+import {Random, RandomInt, Vector2} from "../../Math";
+import {paras} from "../../Parameters";
 
 export default class MazeGenerator
 {
@@ -68,7 +69,66 @@ export default class MazeGenerator
         return this.mapArr;
     }
 
+    private DetermineS()
+    {
+        let map:number[][]=MazeGenerator.Instance.GetMapArr();
+        for(let i=0;i<map.length;i++)
+        {
+            for(let j=0;j<map[0].length;j++)
+            {
+                if(map[i][j]==0)
+                {
+                    this.mStartPos=new Vector2(i,j);
+                    map[i][j]=3;
+                    return;
+                }
+            }
+        }
+    }
+
+    private DetermineE()
+    {
+        let map:number[][]=MazeGenerator.Instance.GetMapArr();
+        for(let i=map.length-1;i>0;i--)
+        {
+            for(let j=map[0].length-1;j>0;j--)
+            {
+                if(map[i][j]==0)
+                {
+                    this.mEndPos=new Vector2(i,j);
+                    map[i][j]=4;
+                    return;
+                }
+            }
+        }
+    }
+
+    public DetermineSE()
+    {
+        this.DetermineS();
+        this.DetermineE();
+    }
+
+    public GetLocation(pos:Vector2)
+    {
+        return new Vector2(pos.y*paras.blocklength+paras.blocklength/2,pos.x*paras.blocklength+paras.blocklength/2);
+    }
+
+    // @ts-ignore
+    private mStartPos:Vector2;
+    // @ts-ignore
+    private mEndPos:Vector2;
     private mapArr:any;
+
+    public GetStartPos()
+    {
+        return this.mStartPos;
+    }
+
+    public GetEndPos()
+    {
+        return this.mEndPos;
+    }
 
     static get Instance()
     {

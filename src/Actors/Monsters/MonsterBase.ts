@@ -4,12 +4,14 @@
 import Sprite from "../Sprite";
 import {Game} from "../../Game";
 import SteeringBehaviors from "../../AI/SteeringBehaviors";
-import {Vector2} from "../../Math";
+import {VdN, Vector2, Zone} from "../../Math";
 import StateMachine from "../../AI/StateMachine/StateMachine";
 import Telegram from "../../AI/Message/Telegram";
 import {Type} from "../Actor";
 import MonsterGlobalState, {MSHiding} from "../../AI/StateMachine/States/MonsterStates";
 import MovementComponent from "../../Components/MovementComponent";
+import CollisionComponent from "../../Components/CollisionComponent";
+import {paras} from "../../Parameters";
 
 export default class MonsterBase extends Sprite
 {
@@ -27,12 +29,21 @@ export default class MonsterBase extends Sprite
         this.SetType(Type.Monster);
 
         this.mc=new MovementComponent(this,100,150);
+        this.cc=new CollisionComponent(this, 100, paras.MonsterSize);
     }
 
     public Update(deltaTime: number)
     {
         super.Update(deltaTime);
         this.mStateMachine.Update();
+        let SteeringForce=this.mSteeringBehaviors.Calculate().Copy();
+
+        let Acceleration= VdN(SteeringForce,paras.MonsterMass);
+
+        let Velocity = this.mc.GetForwardSpeed().Copy();
+        Velocity.AddVec(Acceleration);
+        Velocity.Truncate(paras.MonsterMaxSpeed);
+        this.mc.SetForwardSpeed(Velocity);
     }
 
     public Draw(context: CanvasRenderingContext2D)
@@ -41,7 +52,17 @@ export default class MonsterBase extends Sprite
         if(this.mIsEvil)
         {
             this.DrawThirteen(context, this.mOffset);
+
+            let pos=this.GetGame().GetCamera().TransformToView(new Vector2(0,0));
+            let po1=this.GetGame().GetCamera().TransformToView(new Vector2(this.GetGame().GetPlayer().GetPosition().x,this.GetGame().GetPlayer().GetPosition().y));
+            context.moveTo(pos.x, pos.y);
+            context.lineTo(po1.x,po1.y);
+            context.stroke();
         }
+
+        let pos=this.GetGame().GetCamera().TransformToView(this.GetPosition());
+        context.arc(pos.x, pos.y, paras.MonsterSize,0,2*Math.PI);
+        context.stroke();
     }
 
     //TODO May add some gradually appear and gradually disappear effect
@@ -49,7 +70,8 @@ export default class MonsterBase extends Sprite
     {
         ctx.fillStyle="red";
         ctx.font="20px Georgia"
-        ctx.fillText("13",this.GetPosition().x+offset.x, this.GetPosition().y+offset.y);
+        let pos=this.TransformToView();
+        ctx.fillText("13",pos.x+offset.x, pos.y+offset.y);
         ctx.stroke();
     }
 
@@ -68,6 +90,7 @@ export default class MonsterBase extends Sprite
 
     //Components
     private mc:MovementComponent;
+    private cc:CollisionComponent;
 
     public GetFSM():StateMachine<MonsterBase>
     {
@@ -82,5 +105,15 @@ export default class MonsterBase extends Sprite
     public GetVelocity():Vector2
     {
         return this.mc.GetForwardSpeed();
+    }
+
+    public GetCollider()
+    {
+        return this.cc.GetCollider();
+    }
+
+    public GetSteering()
+    {
+        return this.mSteeringBehaviors;
     }
 }

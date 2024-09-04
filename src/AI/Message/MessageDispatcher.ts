@@ -24,7 +24,7 @@ export default class MessageDispatcher
         }
     }
 
-    public DispatchMsg(delay:number, sender:Actor, receiver:Actor, msg:number, ExtraInfo:any):void
+    public DispatchMsg(delay:number, sender:Actor, receiver:Actor, msg:number, ExtraInfo:any=null):void
     {
         if(!receiver)
         {

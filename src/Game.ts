@@ -10,6 +10,7 @@ import HUD from "./UI/UIScreens/HUD";
 import MapGenerator from "./Map/MapGenerator";
 import MazeGenerator from "./Actors/Background/MazeGenerator";
 import Camera from "./Camera/Camera";
+import TerrainGenerator from "./Actors/Background/TerrainGenerator";
 export class Game
 {
     constructor()
@@ -47,13 +48,14 @@ export class Game
             return;
         }
 
-        InputManager.Instance;
+        TerrainGenerator.Instance;
 
-        MazeGenerator.Instance.creatMap(20,20);
+        InputManager.Instance;
 
         new Background(this, MazeGenerator.Instance.GetMapArr());
         this.mPlayer=new Player(this);
-        new Clock(this,1,new Vector2(100,100),1.0,true);
+        let pos=this.mPlayer.GetPosition();
+        new Clock(this,1,new Vector2(500,500),1.0,true);
 
     }
 
@@ -152,5 +154,20 @@ export class Game
     public GetPlayer()
     {
         return this.mPlayer;
+    }
+
+    public GetCamera()
+    {
+        return this.mCamera;
+    }
+
+    public GetCanvasWidth()
+    {
+        return this.mCanvasWidth;
+    }
+
+    public GetCanvasHeight()
+    {
+        return this.mCanvasHeight;
     }
 }
