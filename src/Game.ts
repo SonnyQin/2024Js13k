@@ -6,6 +6,10 @@ import MessageDispatcher from "./AI/Message/MessageDispatcher";
 import Player from "./Actors/Player";
 import Clock from "./Actors/Monsters/Clock";
 import {Vector2} from "./Math";
+import HUD from "./UI/UIScreens/HUD";
+import MapGenerator from "./Map/MapGenerator";
+import MazeGenerator from "./Actors/Background/MazeGenerator";
+import Camera from "./Camera/Camera";
 export class Game
 {
     constructor()
@@ -16,6 +20,10 @@ export class Game
         // @ts-ignore
         this.mContext=null;
         //this.mInputManager=new InputManager();
+
+        this.mHUD=new HUD(this);
+
+        this.mCamera=new Camera(this);
     }
 
     public Initialize():void
@@ -41,8 +49,9 @@ export class Game
 
         InputManager.Instance;
 
+        MazeGenerator.Instance.creatMap(20,20);
 
-        new Background(this);
+        new Background(this, MazeGenerator.Instance.GetMapArr());
         this.mPlayer=new Player(this);
         new Clock(this,1,new Vector2(100,100),1.0,true);
 
@@ -80,6 +89,10 @@ export class Game
 
         //Regular update of Messages
         MessageDispatcher.Instance.DispatchDelayedMessages();
+
+        this.mCamera.Update();
+
+        this.mHUD.Update();
     }
     private GenerateOutput():void
     {
@@ -89,6 +102,7 @@ export class Game
         {
             iter.Draw(this.mContext);
         }
+        this.mHUD.Draw(this.mContext);
     }
     //Variables
     // @ts-ignore
@@ -104,6 +118,8 @@ export class Game
     //private mInputManager:InputManager;
     // @ts-ignore
     private mPlayer:Player;
+    private mHUD:HUD;
+    private mCamera:Camera;
 
 //Functions about actors
     //TODO Optimization
@@ -131,5 +147,10 @@ export class Game
     public GetActors():Actor[]
     {
         return this.mActors;
+    }
+
+    public GetPlayer()
+    {
+        return this.mPlayer;
     }
 }

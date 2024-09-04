@@ -4,19 +4,24 @@ import {Vector2, Zone} from "../../Math";
 import InputManager from "../../InputManager";
 export default class Button extends Element
 {
-    constructor(owner:Container,pos:Vector2, zone:Zone)
+    constructor(owner:Container,pos:Vector2, width:number, length:number)
     {
         super(owner, pos);
         let self=this;
-        this.mZone=zone;
+        this.mZone=new Zone(new Vector2(pos.x-width/2,pos.y-length/2), new Vector2(pos.x+width/2, pos.y+length/2));
     }
 
     public Update()
     {
         super.Update();
-        if(InputManager.Instance.leftbutton&&this.mZone.Inside(InputManager.Instance.GetMouseVec()))
+        //console.log(InputManager.Instance.leftbutton)
+        if(InputManager.Instance.leftbutton)
         {
-            this.OnClick();
+            //console.log(InputManager.Instance.GetMouseVec());
+            if(this.mZone.Inside(InputManager.Instance.GetMouseVec()))
+            {
+                this.OnClick();
+            }
         }
     }
 
@@ -29,6 +34,11 @@ export default class Button extends Element
     public OnClick()
     {
 
+    }
+
+    public GetZone()
+    {
+        return this.mZone;
     }
 
     //When the mouse click inside the zone, the button will active

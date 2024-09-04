@@ -12,12 +12,14 @@ export default class UIScreen
 
     public Update()
     {
-        this.mStack[this.mStack.length-1].Update();
+        if(this.mStack.length)
+            this.mStack[this.mStack.length-1].Update();
     }
 
     public Draw(ctx:CanvasRenderingContext2D)
     {
-        this.mStack[this.mStack.length-1].Draw(ctx);
+        if(this.mStack.length)
+            this.mStack[this.mStack.length-1].Draw(ctx);
     }
 
     public AddContainer(container:Container)

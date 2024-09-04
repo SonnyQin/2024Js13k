@@ -102,6 +102,9 @@ export function Random(m:number, n:number)
     return Math.random()*(m-n)+n;
 }
 
+export let RandomInt = (min:any,max:any) => Math.floor(Math.random() * (max - min + 1) + min)
+
+
 export function Lerp(l1:Vector2, l2:Vector2, w:number)
 {
     return new Vector2(l1.x+w*(l2.x-l1.x), l1.y+w*(l2.y-l1.y));
