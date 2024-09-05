@@ -2,6 +2,7 @@ import {Component} from "./Component";
 import {Actor, Type} from "../Actors/Actor";
 import MessageDispatcher from "../AI/Message/MessageDispatcher";
 import {MessageType} from "../AI/Message/MessageType";
+import Player from "../Actors/Player";
 
 export default class SenseComponent extends Component
 {
@@ -36,6 +37,7 @@ export default class SenseComponent extends Component
                     }
                     else
                     {
+                        (this.GetOwner() as Player).SetIsPursuited(false);
                         MessageDispatcher.Instance.DispatchMsg(0,this.GetOwner(), this.GetOwner(), MessageType.PM_NORMAL);
                     }
             }

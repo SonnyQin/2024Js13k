@@ -11,6 +11,7 @@ import MapGenerator from "./Map/MapGenerator";
 import MazeGenerator from "./Actors/Background/MazeGenerator";
 import Camera from "./Camera/Camera";
 import TerrainGenerator from "./Actors/Background/TerrainGenerator";
+import Fog from "./Camera/Fog";
 export class Game
 {
     constructor()
@@ -32,6 +33,7 @@ export class Game
         this.mTickCount=Date.now();
 
         let Canvas=document.createElement('canvas');
+        this.mCanvas=Canvas;
         if(!Canvas)
         {
             console.log("Unable to create Canvas");
@@ -51,6 +53,8 @@ export class Game
         TerrainGenerator.Instance;
 
         InputManager.Instance;
+
+        this.mFog=new Fog(this);
 
         new Background(this, MazeGenerator.Instance.GetMapArr());
         this.mPlayer=new Player(this);
@@ -105,6 +109,7 @@ export class Game
             iter.Draw(this.mContext);
         }
         this.mHUD.Draw(this.mContext);
+        //this.mFog.Update();
     }
     //Variables
     // @ts-ignore
@@ -115,6 +120,8 @@ export class Game
     public mIsRunning:boolean;
     //Sorted by Drawing Order
     private mActors:Actor[];
+    // @ts-ignore
+    private mCanvas:HTMLCanvasElement;
     //Canvas context
     private mContext:CanvasRenderingContext2D;
     //private mInputManager:InputManager;
@@ -122,6 +129,8 @@ export class Game
     private mPlayer:Player;
     private mHUD:HUD;
     private mCamera:Camera;
+    // @ts-ignore
+    private mFog:Fog;
 
 //Functions about actors
     //TODO Optimization
@@ -169,5 +178,10 @@ export class Game
     public GetCanvasHeight()
     {
         return this.mCanvasHeight;
+    }
+
+    public GetCanvas()
+    {
+        return this.mCanvas;
     }
 }

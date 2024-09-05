@@ -15,7 +15,7 @@ export default class Sprite extends Actor
 
     public DrawImage(context:CanvasRenderingContext2D,image:string, size:number):void
     {
-        context.font = size+'px Arial';
+        context.font = size+'px Segoe UI Emoji';
         // 设置文本对齐方式
         context.textAlign = 'center'; // 使文本水平居中对齐
         context.textBaseline = 'middle'; // 使文本垂直居中对齐

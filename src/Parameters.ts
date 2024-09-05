@@ -1,6 +1,10 @@
 export let paras={
     "TRThre":100,
     "TThre":150,
+    "RecoverTiredness":-0.1,
+    "FearTiredness":0.1,
+    "TiredTiredness":0.25,
+    "EscapeTiredness":0.2,
     "MaxTiredness":200,
     "blocklength":256,
     "PlayerSize":79,
@@ -13,6 +17,8 @@ export let paras={
     "MonsterMaxSpeed":200,
     "MapR":20,
     "MapC":20,
-    "POVLength":103,
+    "POVLength":303,
+    "POVAngle":120,
+    "offset":-10,
 
 }
