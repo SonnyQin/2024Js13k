@@ -217,12 +217,23 @@ export class CircleCollider
 
     }
 
+    public VecIn(vec:Vector2):boolean
+    {
+        return this.mPosition.DisToSq(vec) < this.mLength * this.mLength;
+    }
+
     public mPosition:Vector2;
     public mLength:number;
 
 }
 
-export function GetAngle(vec:Vector2)
-{
+export function getAngleFromXAxis(x: number, y: number): number {
+    // 计算坐标 (x, y) 相对于 x 轴的角度
+    const angleFromXAxis = Math.atan2(y, x); // 返回值在 -π 到 π 之间
 
+    // 将角度转换为度
+    const angleInDegrees = angleFromXAxis * (180 / Math.PI);
+
+    // 确保角度在 [0, 360) 范围内
+    return (angleInDegrees + 360) % 360;
 }

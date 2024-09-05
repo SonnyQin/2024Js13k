@@ -30,8 +30,8 @@ PlayerState
 😀- no monster around -1 tired
 😨- player is near the monster +0.5 tired
 😱- the monster begin to pursuit, the monster will show the red 13 +speed +1 tired
-🥵- tired after being pursuit by the monster for a long time//normal -speed -1tired
-🥶- relief after being pursuit//normal - speed -1 tired
+🥵- tired after being pursuit by the monster for a long time//normal -speed +1tired// will turn to relief after a certain time without fear 150-200
+🥶- relief after being pursuit//normal - speed -1 tired 100-150&& after being pursuit
 🥳- player win the game
 😭- player lose the game
 

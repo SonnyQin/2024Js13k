@@ -44,6 +44,8 @@ export default class StateMachine<EntityType>
 
     public ChangeState(newState:State<EntityType>):void
     {
+        // @ts-ignore
+        if(this.mCurrentState.Instance==newState.Instance)
         this.mPreviousState=this.mCurrentState;
         if(this.mCurrentState)
             this.mCurrentState.Exit(this.pOwner);

@@ -14,8 +14,27 @@ export default class PlayerGlobalState extends State<Player>
         super.Enter(owner);
     }
 
-    Execute(owner: Player | null) {
-        super.Execute(owner);
+    Execute(owner: Player)
+    {
+        if(owner.GetTiredness()>paras.TThre)
+        {
+            owner.GetFSM().ChangeState(PSTired.Instance);
+        }
+        else
+            if(owner.GetTiredness()>paras.TRThre)
+            {
+                if((owner.GetFSM().isInState(PSAlert.Instance)&&!owner.IsPursuited())||owner.GetFSM().isInState(PSTired.Instance))
+                {
+                    owner.GetFSM().ChangeState(PSRelief.Instance);
+                }
+                else
+                    owner.GetFSM().ChangeState(PSNormal.Instance);
+            }
+            else
+            {
+                if(!owner.IsPursuited())
+                    owner.GetFSM().ChangeState(PSNormal.Instance);
+            }
     }
 
     Exit(owner: Player | null) {
@@ -27,12 +46,15 @@ export default class PlayerGlobalState extends State<Player>
         switch (msg.mMsg)
         {
             case MessageType.PM_NORMAL:
+                owner.SetIsPursuited(false);
                 owner.GetFSM().ChangeState(PSNormal.Instance);
                 return true;
             case MessageType.PM_ALERT:
+                owner.SetIsPursuited(true);
                 owner.GetFSM().ChangeState(PSAlert.Instance);
                 return true;
             case MessageType.PM_ESCAPE:
+                owner.SetIsPursuited(true);
                 owner.GetFSM().ChangeState(PSEscape.Instance);
                 return true;
             case MessageType.PM_WIN:
@@ -74,10 +96,7 @@ export class PSNormal extends State<Player>
 
     Execute(owner: Player)
     {
-        if(owner.GetTiredness()>paras.MaxTiredness)
-        {
-            owner.GetFSM().ChangeState(PSTired.Instance);
-        }
+        owner.AddTiredness(paras.RecoverTiredness);
     }
 
     Exit(owner: Player)
@@ -108,7 +127,7 @@ export class PSAlert extends State<Player>
 
     Execute(owner: Player)
     {
-
+        owner.AddTiredness(paras.FearTiredness);
     }
 
     Exit(owner: Player)
@@ -136,6 +155,11 @@ export class PSEscape extends State<Player>
         owner.SetSelectImage('😱');
     }
 
+    Execute(owner: Player)
+    {
+        owner.AddTiredness(paras.EscapeTiredness);
+    }
+
     private static _Instance:PSEscape;
 }
 
@@ -156,6 +180,11 @@ export class PSTired extends State<Player>
         owner.SetSelectImage('🥵');
     }
 
+    Execute(owner: Player)
+    {
+        owner.AddTiredness(paras.TiredTiredness);
+    }
+
     private static _Instance:PSTired;
 }
 
@@ -174,6 +203,10 @@ export class PSRelief extends State<Player>
 
     Enter(owner: Player) {
         owner.SetSelectImage('🥶');
+    }
+    Execute(owner: Player)
+    {
+        owner.AddTiredness(paras.RecoverTiredness);
     }
 
     private static _Instance:PSRelief;

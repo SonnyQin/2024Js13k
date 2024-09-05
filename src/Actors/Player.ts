@@ -36,6 +36,7 @@ export default class Player extends Sprite
         this.mSize=paras.PlayerSize;
 
         this.mTiredness=0;
+        this.mIsPursuited=false;
         this.mActive=false;
     }
 
@@ -50,6 +51,8 @@ export default class Player extends Sprite
     {
         super.Update(deltaTime);
         this.mStateMachine.Update();
+        console.log(this.mTiredness);
+        console.log(this.IsPursuited());
     }
 
     public Draw(context: CanvasRenderingContext2D)
@@ -57,6 +60,10 @@ export default class Player extends Sprite
         this.DrawImage(context, this.mSelectImage, this.mSize);
         let pos=this.GetGame().GetCamera().TransformToView(this.GetPosition());
         context.arc(pos.x, pos.y, this.mSize,0,2*Math.PI);
+        context.stroke();
+
+        context.moveTo(0,0);
+        context.lineTo(pos.x,pos.y);
         context.stroke();
     }
     
@@ -77,7 +84,8 @@ export default class Player extends Sprite
     //Attributes
     //Determine the substate of Normal State of Player,
     //Also, determining the max speed of player
-    public mTiredness;
+    private mTiredness;
+    private mIsPursuited:boolean;
 
     private mActive:Boolean;
 
@@ -116,13 +124,32 @@ export default class Player extends Sprite
         return this.mTiredness;
     }
 
-    public SetTiredness(tired:number)
+    public AddTiredness(tired:number)
     {
-        this.mTiredness=tired;
+        this.mTiredness+=tired;
+        if(this.mTiredness<0)
+            this.mTiredness=0;
+        if (this.mTiredness > paras.MaxTiredness)
+            this.mTiredness=paras.MaxTiredness;
+    }
+
+    //Determine the velocity according to how tired
+    public TiredVelocity()
+    {
+
     }
 
     public GetCollider()
     {
         return this.cc.GetCollider();
+    }
+
+    public IsPursuited():boolean
+    {
+        return this.mIsPursuited;
+    }
+    public SetIsPursuited(is:boolean)
+    {
+        this.mIsPursuited=is;
     }
 }
