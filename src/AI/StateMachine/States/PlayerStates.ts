@@ -3,6 +3,7 @@ import State from "./State";
 import Telegram from "../../Message/Telegram";
 import {MessageType} from "../../Message/MessageType";
 import {paras} from "../../../Parameters";
+import MessageDispatcher from "../../Message/MessageDispatcher";
 
 export default class PlayerGlobalState extends State<Player>
 {
@@ -10,31 +11,21 @@ export default class PlayerGlobalState extends State<Player>
         super();
     }
 
-    Enter(owner: Player | null) {
-        super.Enter(owner);
+    Enter(owner: Player)
+    {
+
     }
 
     Execute(owner: Player)
     {
+        if(owner.GetFSM().isInState(PSWIN.Instance)||owner.GetFSM().isInState(PSLOSE.Instance))
+            return;
         if(owner.GetTiredness()>paras.TThre)
         {
             owner.GetFSM().ChangeState(PSTired.Instance);
         }
-        else
-            if(owner.GetTiredness()>paras.TRThre)
-            {
-                if((owner.GetFSM().isInState(PSAlert.Instance)&&!owner.IsPursuited())||owner.GetFSM().isInState(PSTired.Instance))
-                {
-                    owner.GetFSM().ChangeState(PSRelief.Instance);
-                }
-                else
-                    owner.GetFSM().ChangeState(PSNormal.Instance);
-            }
-            else
-            {
-                if(!owner.IsPursuited())
-                    owner.GetFSM().ChangeState(PSNormal.Instance);
-            }
+        if(owner.GetFSM().GetCurrentState())
+            console.log(owner.GetFSM().GetCurrentState());
     }
 
     Exit(owner: Player | null) {
@@ -46,22 +37,54 @@ export default class PlayerGlobalState extends State<Player>
         switch (msg.mMsg)
         {
             case MessageType.PM_NORMAL:
-                owner.SetIsPursuited(false);
                 owner.GetFSM().ChangeState(PSNormal.Instance);
                 return true;
             case MessageType.PM_ALERT:
-                owner.SetIsPursuited(true);
-                owner.GetFSM().ChangeState(PSAlert.Instance);
+                owner.AddPursuit(msg.mSender);
+                //If already in EScape state, Ignore Alert
+                if(!owner.GetFSM().isInState(PSEscape.Instance))
+                    owner.GetFSM().ChangeState(PSAlert.Instance);
                 return true;
             case MessageType.PM_ESCAPE:
-                owner.SetIsPursuited(true);
+                owner.AddPursuit(msg.mSender);
                 owner.GetFSM().ChangeState(PSEscape.Instance);
                 return true;
             case MessageType.PM_WIN:
                 owner.GetFSM().ChangeState(PSWIN.Instance);
+                MessageDispatcher.Instance.DispatchMsg(300,owner,owner,MessageType.GAMELOSE);
                 return true;
             case MessageType.PM_LOSE:
                 owner.GetFSM().ChangeState(PSLOSE.Instance);
+                MessageDispatcher.Instance.DispatchMsg(300,owner,owner,MessageType.GAMELOSE);
+                return true;
+            case MessageType.GAMEWIN:
+                owner.GetGame().Stop();
+                owner.GetGame().WIN();
+                return true;
+            case MessageType.GAMELOSE:
+                owner.GetGame().Stop();
+                owner.GetGame().LOSE();
+                return true;
+            //Meaning the player escaped the pursuit
+            case MessageType.PM_FLED:
+                owner.RemovePursuit(msg.mSender);
+                if(!owner.IsPursuited())
+                {
+                    if(owner.GetTiredness()>paras.TThre)
+                    {
+                        owner.GetFSM().ChangeState(PSTired.Instance);
+                    }
+                    else
+                    if(owner.GetTiredness()<paras.TThre&&owner.GetTiredness()>paras.TRThre)
+                    {
+                        owner.GetFSM().ChangeState(PSRelief.Instance);
+                    }
+                    else
+                    {
+                        owner.GetFSM().ChangeState(PSNormal.Instance);
+                    }
+                }
+
         }
         return false;
     }
@@ -92,6 +115,7 @@ export class PSNormal extends State<Player>
     {
         super.Enter(owner);
         owner.SetSelectImage('😃');
+        owner.SetSpeed(paras.PlayerNormalSpeed);
     }
 
     Execute(owner: Player)
@@ -122,6 +146,7 @@ export class PSAlert extends State<Player>
     Enter(owner: Player)
     {
         owner.SetSelectImage('😨');
+        owner.SetSpeed(paras.PlayerReliefSpeed);
 
     }
 
@@ -153,11 +178,12 @@ export class PSEscape extends State<Player>
 
     Enter(owner: Player) {
         owner.SetSelectImage('😱');
+        owner.SetSpeed(paras.PlayerEscapeSpeed);
     }
 
     Execute(owner: Player)
     {
-        owner.AddTiredness(paras.EscapeTiredness);
+            owner.AddTiredness(paras.EscapeTiredness);
     }
 
     private static _Instance:PSEscape;
@@ -178,11 +204,15 @@ export class PSTired extends State<Player>
 
     Enter(owner: Player) {
         owner.SetSelectImage('🥵');
+        owner.SetSpeed(paras.PlayerTiredSpeed);
     }
 
     Execute(owner: Player)
     {
-        owner.AddTiredness(paras.TiredTiredness);
+        if(owner.IsPursuited())
+            owner.AddTiredness(paras.TiredTiredness);
+        else
+            owner.AddTiredness(paras.RecoverTiredness);
     }
 
     private static _Instance:PSTired;
@@ -203,6 +233,7 @@ export class PSRelief extends State<Player>
 
     Enter(owner: Player) {
         owner.SetSelectImage('🥶');
+        owner.SetSpeed(paras.PlayerReliefSpeed);
     }
     Execute(owner: Player)
     {
@@ -227,6 +258,7 @@ export class PSWIN extends State<Player>
 
     Enter(owner: Player) {
         owner.SetSelectImage('🥳');
+        owner.SetSpeed(paras.PlayerNormalSpeed);
     }
 
     private static _Instance:PSWIN;
@@ -247,6 +279,7 @@ export class PSLOSE extends State<Player>
 
     Enter(owner: Player) {
         owner.SetSelectImage('😭');
+        owner.SetSpeed(paras.PlayerNormalSpeed);
     }
 
     private static _Instance:PSLOSE;

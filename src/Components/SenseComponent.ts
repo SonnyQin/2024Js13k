@@ -6,7 +6,7 @@ import Player from "../Actors/Player";
 
 export default class SenseComponent extends Component
 {
-    constructor(actor:Actor, updateOrder:number=100)
+    constructor(actor:Player, updateOrder:number=100)
     {
         super(actor, updateOrder);
         this.mAlertDis=500;
@@ -24,7 +24,7 @@ export default class SenseComponent extends Component
                 if(dis<this.mDangerDis)
                 {
                     //Change State to escape
-                    MessageDispatcher.Instance.DispatchMsg(0,this.GetOwner(), this.GetOwner(), MessageType.PM_ESCAPE);
+                    MessageDispatcher.Instance.DispatchMsg(0,actor, this.GetOwner(), MessageType.PM_ESCAPE);
 
                     //Ask monster to pursuit
                     MessageDispatcher.Instance.DispatchMsg(0.5,this.GetOwner(),actor,MessageType.MM_PERSUIT);
@@ -33,12 +33,11 @@ export default class SenseComponent extends Component
                     if(dis<this.mAlertDis)
                     {
                         //Change State to escape
-                        MessageDispatcher.Instance.DispatchMsg(0,this.GetOwner(), this.GetOwner() , MessageType.PM_ALERT);
+                        MessageDispatcher.Instance.DispatchMsg(0,actor, this.GetOwner() , MessageType.PM_ALERT);
                     }
                     else
                     {
-                        (this.GetOwner() as Player).SetIsPursuited(false);
-                        MessageDispatcher.Instance.DispatchMsg(0,this.GetOwner(), this.GetOwner(), MessageType.PM_NORMAL);
+                        MessageDispatcher.Instance.DispatchMsg(0,actor, this.GetOwner() , MessageType.PM_FLED);
                     }
             }
         }

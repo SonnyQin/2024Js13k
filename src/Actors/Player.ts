@@ -5,12 +5,15 @@ import {Vector2, Zone} from "../Math";
 import MovementComponent from "../Components/MovementComponent";
 import StateMachine from "../AI/StateMachine/StateMachine";
 import Telegram from "../AI/Message/Telegram";
-import {Type} from "./Actor";
+import {Actor, Type} from "./Actor";
 import SenseComponent from "../Components/SenseComponent";
 import PlayerGlobalState, {PSNormal} from "../AI/StateMachine/States/PlayerStates";
 import CollisionComponent from "../Components/CollisionComponent";
 import {paras} from "../Parameters";
 import MazeGenerator from "./Background/MazeGenerator";
+import MessageDispatcher from "../AI/Message/MessageDispatcher";
+import {MessageType} from "../AI/Message/MessageType";
+import MonsterBase from "./Monsters/MonsterBase";
 //May not use mAssets, use SelectAssets Instead, and will hard code the
 //image in state
 export default class Player extends Sprite
@@ -21,7 +24,7 @@ export default class Player extends Sprite
         let pos=MazeGenerator.Instance.GetLocation(MazeGenerator.Instance.GetStartPos());
         super(game,0,new Vector2(pos.x,pos.y),1.0);
 
-        this.mc=new MovementComponent(this,100,500);
+        this.mc=new MovementComponent(this,100,paras.PlayerNormalSpeed);
         this.sc=new SenseComponent(this);
         this.cc=new CollisionComponent(this, 100, paras.PlayerSize);
 
@@ -36,8 +39,8 @@ export default class Player extends Sprite
         this.mSize=paras.PlayerSize;
 
         this.mTiredness=0;
-        this.mIsPursuited=false;
         this.mActive=false;
+        this.mPursuitMonsters=new Set();
     }
 
     public ProcessInput(keyState:InputManager):void
@@ -50,9 +53,12 @@ export default class Player extends Sprite
     public Update(deltaTime: number)
     {
         super.Update(deltaTime);
+        console.log(this.GetPosition());
         this.mStateMachine.Update();
-        console.log(this.mTiredness);
-        console.log(this.IsPursuited());
+        if(MazeGenerator.Instance.GetWinZone().Inside(this.GetPosition()))
+        {
+            MessageDispatcher.Instance.DispatchMsg(0,this,this, MessageType.PM_WIN);
+        }
     }
 
     public Draw(context: CanvasRenderingContext2D)
@@ -85,7 +91,8 @@ export default class Player extends Sprite
     //Determine the substate of Normal State of Player,
     //Also, determining the max speed of player
     private mTiredness;
-    private mIsPursuited:boolean;
+    //Monsters that are pursuiting the player
+    private mPursuitMonsters:Set<any>;
 
     private mActive:Boolean;
 
@@ -107,6 +114,11 @@ export default class Player extends Sprite
     public GetSpeed():number
     {
         return this.mc.GetForwardSpeed().Length();
+    }
+
+    public SetSpeed(speed:number)
+    {
+        this.mc.SetMaxSpeed(speed);
     }
 
     public GetVelocity():Vector2
@@ -133,12 +145,6 @@ export default class Player extends Sprite
             this.mTiredness=paras.MaxTiredness;
     }
 
-    //Determine the velocity according to how tired
-    public TiredVelocity()
-    {
-
-    }
-
     public GetCollider()
     {
         return this.cc.GetCollider();
@@ -146,10 +152,17 @@ export default class Player extends Sprite
 
     public IsPursuited():boolean
     {
-        return this.mIsPursuited;
+        return this.mPursuitMonsters.size > 0;
+
     }
-    public SetIsPursuited(is:boolean)
+    
+    public AddPursuit(monster:Actor):void
     {
-        this.mIsPursuited=is;
+        this.mPursuitMonsters.add(monster);
+    }
+
+    public RemovePursuit(monster:Actor):void
+    {
+        this.mPursuitMonsters.delete(monster);
     }
 }

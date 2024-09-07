@@ -49,15 +49,9 @@ export default class MonsterBase extends Sprite
     public Draw(context: CanvasRenderingContext2D)
     {
         super.Draw(context);
-        if(this.mIsEvil)
+        if(this.mIsEvil&&this.mStateMachine.GetCurrentState()!=MSHiding.Instance)
         {
             this.DrawThirteen(context, this.mOffset);
-
-            let pos=this.GetGame().GetCamera().TransformToView(new Vector2(0,0));
-            let po1=this.GetGame().GetCamera().TransformToView(new Vector2(this.GetGame().GetPlayer().GetPosition().x,this.GetGame().GetPlayer().GetPosition().y));
-            context.moveTo(pos.x, pos.y);
-            context.lineTo(po1.x,po1.y);
-            context.stroke();
         }
 
         let pos=this.GetGame().GetCamera().TransformToView(this.GetPosition());

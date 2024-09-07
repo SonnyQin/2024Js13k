@@ -10,10 +10,13 @@ var MessageType;
     MessageType[MessageType["PM_RELIEF"] = 4] = "PM_RELIEF";
     MessageType[MessageType["PM_WIN"] = 5] = "PM_WIN";
     MessageType[MessageType["PM_LOSE"] = 6] = "PM_LOSE";
-    MessageType[MessageType["MM_HIDE"] = 7] = "MM_HIDE";
-    MessageType[MessageType["MM_ALERT"] = 8] = "MM_ALERT";
-    MessageType[MessageType["MM_PERSUIT"] = 9] = "MM_PERSUIT";
-    MessageType[MessageType["MM_ATTACK"] = 10] = "MM_ATTACK";
-    MessageType[MessageType["CM_COLLIDE"] = 11] = "CM_COLLIDE";
+    MessageType[MessageType["PM_FLED"] = 7] = "PM_FLED";
+    MessageType[MessageType["MM_HIDE"] = 8] = "MM_HIDE";
+    MessageType[MessageType["MM_ALERT"] = 9] = "MM_ALERT";
+    MessageType[MessageType["MM_PERSUIT"] = 10] = "MM_PERSUIT";
+    MessageType[MessageType["MM_ATTACK"] = 11] = "MM_ATTACK";
+    MessageType[MessageType["CM_COLLIDE"] = 12] = "CM_COLLIDE";
+    MessageType[MessageType["GAMEWIN"] = 13] = "GAMEWIN";
+    MessageType[MessageType["GAMELOSE"] = 14] = "GAMELOSE";
 })(MessageType || (exports.MessageType = MessageType = {}));
 //# sourceMappingURL=MessageType.js.map

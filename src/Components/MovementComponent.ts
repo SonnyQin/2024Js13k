@@ -51,4 +51,9 @@ export default class MovementComponent extends Component
             return new Vector2();
         return worldMousepos.Normalize().Multiply(length/200*this.mMaxSpeed);
     }
+
+    public SetMaxSpeed(speed:number)
+    {
+        this.mMaxSpeed=speed;
+    }
 }

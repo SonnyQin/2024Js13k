@@ -15,6 +15,7 @@ const MazeGenerator_1 = __importDefault(require("./Actors/Background/MazeGenerat
 const Camera_1 = __importDefault(require("./Camera/Camera"));
 const TerrainGenerator_1 = __importDefault(require("./Actors/Background/TerrainGenerator"));
 const Fog_1 = __importDefault(require("./Camera/Fog"));
+const Treasure_1 = __importDefault(require("./Actors/Monsters/Treasure"));
 class Game {
     constructor() {
         this.mIsRunning = true;
@@ -25,6 +26,7 @@ class Game {
         //this.mInputManager=new InputManager();
         this.mHUD = new HUD_1.default(this);
         this.mCamera = new Camera_1.default(this);
+        this.mResult = false;
     }
     Initialize() {
         this.mTickCount = Date.now();
@@ -48,8 +50,8 @@ class Game {
         this.mFog = new Fog_1.default(this);
         new Background_1.Background(this, MazeGenerator_1.default.Instance.GetMapArr());
         this.mPlayer = new Player_1.default(this);
-        let pos = this.mPlayer.GetPosition();
         new Clock_1.default(this, 1, new Math_1.Vector2(500, 500), 1.0, true);
+        new Treasure_1.default(this, 1, MazeGenerator_1.default.Instance.GetWinZone().mPosition, 1.0);
     }
     RunLoop() {
         this.ProcessInput();
@@ -85,7 +87,7 @@ class Game {
             iter.Draw(this.mContext);
         }
         this.mHUD.Draw(this.mContext);
-        //this.mFog.Update();
+        /*this.mFog.Update();*/
     }
     //Functions about actors
     //TODO Optimization
@@ -121,6 +123,12 @@ class Game {
     }
     GetCanvas() {
         return this.mCanvas;
+    }
+    WIN() {
+        this.mResult = true;
+    }
+    LOSE() {
+        this.mResult = false;
     }
 }
 exports.Game = Game;

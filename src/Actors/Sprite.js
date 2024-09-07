@@ -19,7 +19,6 @@ class Sprite extends Actor_1.Actor {
         let pos = this.TransformToView();
         context.fillText(image, pos.x, pos.y);
         context.moveTo(0, 0);
-        context.lineTo(this.GetPosition().x, this.GetPosition().y);
         context.stroke();
         /*context.restore();*/
     }

@@ -12,6 +12,7 @@ import MazeGenerator from "./Actors/Background/MazeGenerator";
 import Camera from "./Camera/Camera";
 import TerrainGenerator from "./Actors/Background/TerrainGenerator";
 import Fog from "./Camera/Fog";
+import Treasure from "./Actors/Monsters/Treasure";
 export class Game
 {
     constructor()
@@ -26,6 +27,8 @@ export class Game
         this.mHUD=new HUD(this);
 
         this.mCamera=new Camera(this);
+
+        this.mResult=false;
     }
 
     public Initialize():void
@@ -58,8 +61,8 @@ export class Game
 
         new Background(this, MazeGenerator.Instance.GetMapArr());
         this.mPlayer=new Player(this);
-        let pos=this.mPlayer.GetPosition();
         new Clock(this,1,new Vector2(500,500),1.0,true);
+        new Treasure(this,1,MazeGenerator.Instance.GetWinZone().mPosition,1.0);
 
     }
 
@@ -109,7 +112,7 @@ export class Game
             iter.Draw(this.mContext);
         }
         this.mHUD.Draw(this.mContext);
-        //this.mFog.Update();
+        /*this.mFog.Update();*/
     }
     //Variables
     // @ts-ignore
@@ -131,6 +134,8 @@ export class Game
     private mCamera:Camera;
     // @ts-ignore
     private mFog:Fog;
+
+    private mResult:boolean;
 
 //Functions about actors
     //TODO Optimization
@@ -183,5 +188,15 @@ export class Game
     public GetCanvas()
     {
         return this.mCanvas;
+    }
+
+    public WIN()
+    {
+        this.mResult=true;
+    }
+
+    public LOSE()
+    {
+        this.mResult=false;
     }
 }

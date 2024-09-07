@@ -35,6 +35,9 @@ class MovementComponent extends Component_1.Component {
             return new Math_1.Vector2();
         return worldMousepos.Normalize().Multiply(length / 200 * this.mMaxSpeed);
     }
+    SetMaxSpeed(speed) {
+        this.mMaxSpeed = speed;
+    }
 }
 exports.default = MovementComponent;
 //# sourceMappingURL=MovementComponent.js.map

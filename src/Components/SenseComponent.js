@@ -20,17 +20,16 @@ class SenseComponent extends Component_1.Component {
                 let dis = actor.GetPosition().DisTo(this.GetOwner().GetPosition());
                 if (dis < this.mDangerDis) {
                     //Change State to escape
-                    MessageDispatcher_1.default.Instance.DispatchMsg(0, this.GetOwner(), this.GetOwner(), MessageType_1.MessageType.PM_ESCAPE);
+                    MessageDispatcher_1.default.Instance.DispatchMsg(0, actor, this.GetOwner(), MessageType_1.MessageType.PM_ESCAPE);
                     //Ask monster to pursuit
                     MessageDispatcher_1.default.Instance.DispatchMsg(0.5, this.GetOwner(), actor, MessageType_1.MessageType.MM_PERSUIT);
                 }
                 else if (dis < this.mAlertDis) {
                     //Change State to escape
-                    MessageDispatcher_1.default.Instance.DispatchMsg(0, this.GetOwner(), this.GetOwner(), MessageType_1.MessageType.PM_ALERT);
+                    MessageDispatcher_1.default.Instance.DispatchMsg(0, actor, this.GetOwner(), MessageType_1.MessageType.PM_ALERT);
                 }
                 else {
-                    this.GetOwner().SetIsPursuited(false);
-                    MessageDispatcher_1.default.Instance.DispatchMsg(0, this.GetOwner(), this.GetOwner(), MessageType_1.MessageType.PM_NORMAL);
+                    MessageDispatcher_1.default.Instance.DispatchMsg(0, actor, this.GetOwner(), MessageType_1.MessageType.PM_FLED);
                 }
             }
         }

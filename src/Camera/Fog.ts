@@ -1,7 +1,7 @@
 import {Game} from "../Game";
 import InputManager from "../InputManager";
 import {paras} from "../Parameters";
-import {getAngleFromXAxis} from "../Math";
+import {getAngleFromXAxis, Random} from "../Math";
 
 export default class Fog
 {
@@ -15,66 +15,73 @@ export default class Fog
             this.mCanvas.width=this.mCanvasWidth=this.mGame.GetCanvasWidth();
             this.mCanvas.height=this.mCanvasHeight=this.mGame.GetCanvasHeight();
             //document.body.appendChild(this.mCanvas);
+            this.mIncrease=true;
+            this.mCurrentOpacity=paras.MinOpacity;
         }
     }
 
     public Update()
     {
-// 清空 Canvas
+        this.updateOpacity();
+// Assuming 'this.mContext' is your 2D canvas context and 'this.mCanvas' is your canvas element
+
+// Clear the Canvas
         this.mContext.clearRect(0, 0, this.mCanvasWidth, this.mCanvasHeight);
 
-// 绘制原始图像到 Canvas
+// Draw the original image onto the Canvas
         this.mContext.drawImage(this.mGame.GetCanvas(), 0, 0);
 
-// 用黑色填充整个 Canvas
-        this.mContext.globalCompositeOperation = 'source-over'; // 确保此时的合成操作是 'source-over'
+// Fill the entire Canvas with black
+        this.mContext.globalCompositeOperation = 'source-over';
         this.mContext.fillStyle = 'black';
         this.mContext.fillRect(0, 0, this.mCanvasWidth, this.mCanvasHeight);
 
-// 获取玩家位置并进行坐标转换
+// Get player position and transform coordinates
         let pos = this.mGame.GetCamera().TransformToView(this.mGame.GetPlayer().GetPosition());
 
-// 获取玩家半径
-        const playerSize = paras.PlayerCollisionSize; // 角色的半径
+// Get player size
+        const playerSize = paras.POVLength; // Character's radius
 
-// 设置全局合成操作为 'destination-out'
+// Set global composite operation to 'destination-out' to cut out the circle
         this.mContext.globalCompositeOperation = 'destination-out';
-
-// 绘制角色的圆形区域
         this.mContext.beginPath();
-        this.mContext.arc(pos.x, pos.y, playerSize, 0, Math.PI * 2); // 画圆
-        this.mContext.fill(); // 填充圆形区域
+        this.mContext.arc(pos.x, pos.y, playerSize, 0, Math.PI * 2); // Draw circle
+        this.mContext.fill(); // Fill the circle area
 
-// 获取鼠标位置相对于 Canvas 的坐标
-        const mouseX = InputManager.Instance.mousex;
-        const mouseY = InputManager.Instance.mousey;
+// Reset composite operation to 'source-over'
+        this.mContext.globalCompositeOperation = 'source-over';
 
-// 计算鼠标相对于 Canvas 的角度（以 x 轴为基准）
-        const angle = getAngleFromXAxis(mouseX - pos.x, mouseY - pos.y); // 鼠标相对视野中心的角度
-
-// 绘制扇形遮罩区域
-        const POVLength = paras.POVLength; // 扇形的半径
-        const POVAngle = paras.POVAngle; // 扇形的视角范围（单位：度）
-        console.log(POVAngle);
-
-// 转换角度为弧度
-        const startAngle = (angle - POVAngle / 2) * (Math.PI / 180);
-        const endAngle = (angle + POVAngle / 2) * (Math.PI / 180);
-
+// Darken the circle area by drawing a black circle with reduced opacity
+        this.mContext.fillStyle = 'rgba(0, 0, 0,'+this.mCurrentOpacity+' )'; // Adjust opacity as needed
         this.mContext.beginPath();
-        this.mContext.moveTo(pos.x, pos.y); // 从中心点开始
-        this.mContext.arc(pos.x, pos.y, POVLength, startAngle, endAngle); // 画圆弧
-        this.mContext.lineTo(pos.x, pos.y); // 连接回中心点
-        this.mContext.closePath();
+        this.mContext.arc(pos.x, pos.y, playerSize, 0, Math.PI * 2); // Draw circle
+        this.mContext.fill(); // Fill the circle area
 
-        this.mContext.fill(); // 填充扇形区域
-
-// 将结果绘制到目标 Canvas 上
+// Draw the result onto the target Canvas
         this.mGame.GetContext().drawImage(this.mCanvas, 0, 0);
 
-        this.mGame.GetContext().moveTo(0,0);
-        this.mGame.GetContext().lineTo(pos.x,pos.y);
+// Optionally draw a line from (0, 0) to the player's position
+        this.mGame.GetContext().moveTo(0, 0);
+        this.mGame.GetContext().lineTo(pos.x, pos.y);
         this.mGame.GetContext().stroke();
+    }
+
+    private updateOpacity(): void {
+        if (this.mIncrease) {
+            this.mCurrentOpacity += paras.OpacitySpeed;
+            if (this.mCurrentOpacity >= paras.MaxOpacity) {
+                this.mCurrentOpacity = paras.MaxOpacity;
+                this.mIncrease = false;
+            }
+        } else {
+            this.mCurrentOpacity -= paras.OpacitySpeed;
+
+            if (this.mCurrentOpacity <= paras.MinOpacity)
+            {
+                this.mCurrentOpacity = paras.MinOpacity;
+                this.mIncrease = true;
+            }
+        }
     }
 
     public mGame:Game;
@@ -85,4 +92,8 @@ export default class Fog
     private mCanvasWidth:number;
     // @ts-ignore
     private mCanvasHeight:number;
+    // @ts-ignore
+    private mIncrease:boolean;
+    // @ts-ignore
+    private mCurrentOpacity:number;
 }

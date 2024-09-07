@@ -65,13 +65,8 @@ class MonsterBase extends Sprite_1.default {
     }
     Draw(context) {
         super.Draw(context);
-        if (this.mIsEvil) {
+        if (this.mIsEvil && this.mStateMachine.GetCurrentState() != MonsterStates_1.MSHiding.Instance) {
             this.DrawThirteen(context, this.mOffset);
-            let pos = this.GetGame().GetCamera().TransformToView(new Math_1.Vector2(0, 0));
-            let po1 = this.GetGame().GetCamera().TransformToView(new Math_1.Vector2(this.GetGame().GetPlayer().GetPosition().x, this.GetGame().GetPlayer().GetPosition().y));
-            context.moveTo(pos.x, pos.y);
-            context.lineTo(po1.x, po1.y);
-            context.stroke();
         }
         let pos = this.GetGame().GetCamera().TransformToView(this.GetPosition());
         context.arc(pos.x, pos.y, Parameters_1.paras.MonsterSize, 0, 2 * Math.PI);

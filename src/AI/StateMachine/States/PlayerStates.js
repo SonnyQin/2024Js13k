@@ -7,28 +7,21 @@ exports.PSLOSE = exports.PSWIN = exports.PSRelief = exports.PSTired = exports.PS
 const State_1 = __importDefault(require("./State"));
 const MessageType_1 = require("../../Message/MessageType");
 const Parameters_1 = require("../../../Parameters");
+const MessageDispatcher_1 = __importDefault(require("../../Message/MessageDispatcher"));
 class PlayerGlobalState extends State_1.default {
     constructor() {
         super();
     }
     Enter(owner) {
-        super.Enter(owner);
     }
     Execute(owner) {
+        if (owner.GetFSM().isInState(PSWIN.Instance) || owner.GetFSM().isInState(PSLOSE.Instance))
+            return;
         if (owner.GetTiredness() > Parameters_1.paras.TThre) {
             owner.GetFSM().ChangeState(PSTired.Instance);
         }
-        else if (owner.GetTiredness() > Parameters_1.paras.TRThre) {
-            if ((owner.GetFSM().isInState(PSAlert.Instance) && !owner.IsPursuited()) || owner.GetFSM().isInState(PSTired.Instance)) {
-                owner.GetFSM().ChangeState(PSRelief.Instance);
-            }
-            else
-                owner.GetFSM().ChangeState(PSNormal.Instance);
-        }
-        else {
-            if (!owner.IsPursuited())
-                owner.GetFSM().ChangeState(PSNormal.Instance);
-        }
+        if (owner.GetFSM().GetCurrentState())
+            console.log(owner.GetFSM().GetCurrentState());
     }
     Exit(owner) {
         super.Exit(owner);
@@ -36,22 +29,48 @@ class PlayerGlobalState extends State_1.default {
     OnMessage(owner, msg) {
         switch (msg.mMsg) {
             case MessageType_1.MessageType.PM_NORMAL:
-                owner.SetIsPursuited(false);
                 owner.GetFSM().ChangeState(PSNormal.Instance);
                 return true;
             case MessageType_1.MessageType.PM_ALERT:
-                owner.SetIsPursuited(true);
-                owner.GetFSM().ChangeState(PSAlert.Instance);
+                owner.AddPursuit(msg.mSender);
+                //If already in EScape state, Ignore Alert
+                if (!owner.GetFSM().isInState(PSEscape.Instance))
+                    owner.GetFSM().ChangeState(PSAlert.Instance);
                 return true;
             case MessageType_1.MessageType.PM_ESCAPE:
-                owner.SetIsPursuited(true);
+                owner.AddPursuit(msg.mSender);
                 owner.GetFSM().ChangeState(PSEscape.Instance);
                 return true;
             case MessageType_1.MessageType.PM_WIN:
                 owner.GetFSM().ChangeState(PSWIN.Instance);
+                MessageDispatcher_1.default.Instance.DispatchMsg(300, owner, owner, MessageType_1.MessageType.GAMELOSE);
                 return true;
             case MessageType_1.MessageType.PM_LOSE:
                 owner.GetFSM().ChangeState(PSLOSE.Instance);
+                MessageDispatcher_1.default.Instance.DispatchMsg(300, owner, owner, MessageType_1.MessageType.GAMELOSE);
+                return true;
+            case MessageType_1.MessageType.GAMEWIN:
+                owner.GetGame().Stop();
+                owner.GetGame().WIN();
+                return true;
+            case MessageType_1.MessageType.GAMELOSE:
+                owner.GetGame().Stop();
+                owner.GetGame().LOSE();
+                return true;
+            //Meaning the player escaped the pursuit
+            case MessageType_1.MessageType.PM_FLED:
+                owner.RemovePursuit(msg.mSender);
+                if (!owner.IsPursuited()) {
+                    if (owner.GetTiredness() > Parameters_1.paras.TThre) {
+                        owner.GetFSM().ChangeState(PSTired.Instance);
+                    }
+                    else if (owner.GetTiredness() < Parameters_1.paras.TThre && owner.GetTiredness() > Parameters_1.paras.TRThre) {
+                        owner.GetFSM().ChangeState(PSRelief.Instance);
+                    }
+                    else {
+                        owner.GetFSM().ChangeState(PSNormal.Instance);
+                    }
+                }
         }
         return false;
     }
@@ -74,6 +93,7 @@ class PSNormal extends State_1.default {
     Enter(owner) {
         super.Enter(owner);
         owner.SetSelectImage('😃');
+        owner.SetSpeed(Parameters_1.paras.PlayerNormalSpeed);
     }
     Execute(owner) {
         owner.AddTiredness(Parameters_1.paras.RecoverTiredness);
@@ -93,6 +113,7 @@ class PSAlert extends State_1.default {
     }
     Enter(owner) {
         owner.SetSelectImage('😨');
+        owner.SetSpeed(Parameters_1.paras.PlayerReliefSpeed);
     }
     Execute(owner) {
         owner.AddTiredness(Parameters_1.paras.FearTiredness);
@@ -112,6 +133,7 @@ class PSEscape extends State_1.default {
     }
     Enter(owner) {
         owner.SetSelectImage('😱');
+        owner.SetSpeed(Parameters_1.paras.PlayerEscapeSpeed);
     }
     Execute(owner) {
         owner.AddTiredness(Parameters_1.paras.EscapeTiredness);
@@ -129,9 +151,13 @@ class PSTired extends State_1.default {
     }
     Enter(owner) {
         owner.SetSelectImage('🥵');
+        owner.SetSpeed(Parameters_1.paras.PlayerTiredSpeed);
     }
     Execute(owner) {
-        owner.AddTiredness(Parameters_1.paras.TiredTiredness);
+        if (owner.IsPursuited())
+            owner.AddTiredness(Parameters_1.paras.TiredTiredness);
+        else
+            owner.AddTiredness(Parameters_1.paras.RecoverTiredness);
     }
 }
 exports.PSTired = PSTired;
@@ -146,6 +172,7 @@ class PSRelief extends State_1.default {
     }
     Enter(owner) {
         owner.SetSelectImage('🥶');
+        owner.SetSpeed(Parameters_1.paras.PlayerReliefSpeed);
     }
     Execute(owner) {
         owner.AddTiredness(Parameters_1.paras.RecoverTiredness);
@@ -163,6 +190,7 @@ class PSWIN extends State_1.default {
     }
     Enter(owner) {
         owner.SetSelectImage('🥳');
+        owner.SetSpeed(Parameters_1.paras.PlayerNormalSpeed);
     }
 }
 exports.PSWIN = PSWIN;
@@ -177,6 +205,7 @@ class PSLOSE extends State_1.default {
     }
     Enter(owner) {
         owner.SetSelectImage('😭');
+        owner.SetSpeed(Parameters_1.paras.PlayerNormalSpeed);
     }
 }
 exports.PSLOSE = PSLOSE;

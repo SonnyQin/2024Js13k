@@ -1,8 +1,6 @@
 import {Component} from "./Component";
 import {Actor, Type} from "../Actors/Actor";
 import {CircleCollider} from "../Math";
-import MonsterBase from "../Actors/Monsters/MonsterBase";
-import Player from "../Actors/Player";
 import MessageDispatcher from "../AI/Message/MessageDispatcher";
 import {MessageType} from "../AI/Message/MessageType";
 
@@ -19,31 +17,27 @@ export default class CollisionComponent extends Component
     Update(deltaTime: number)
     {
         super.Update(deltaTime);
+        if(this.GetOwner().GetType()!=Type.Player)
+            return;
         this.mCircleCollider.mPosition=this.GetOwner().GetPosition().Copy();
         //Check for Actors
         for(let actor of this.GetOwner().GetGame().GetActors())
         {
-            //TODO May Optimize
-            if(actor!=this.GetOwner()&&actor)
+            if(actor.GetType()==Type.Monster)
             {
-                if(actor.GetType()==Type.Monster||actor.GetType()==Type.Player)
+                if(actor!=this.GetOwner()&&actor)
                 {
-                    this.Notice(actor as MonsterBase|Player)
+                    // @ts-ignore
+                    if(actor.GetCollider().IntersectCircleCollider(this.GetCollider()))
+                    {
+                        MessageDispatcher.Instance.DispatchMsg(0,actor, this.GetOwner(), MessageType.PM_LOSE);
+                        return;
+                    }
                 }
             }
         }
 
         //Check for terrain
-    }
-
-    public Notice(actor:any)
-    {
-        if(actor.GetCollider().IntersectCircleCollider(this.GetCollider()))
-        {
-            //Only perform the OnCollide function of owner's self
-            MessageDispatcher.Instance.DispatchMsg(0,actor, this.GetOwner(), MessageType.CM_COLLIDE);
-            //console.log("Collide");
-        }
     }
 
     public SetSize(length:number)

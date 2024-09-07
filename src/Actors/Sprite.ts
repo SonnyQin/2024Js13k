@@ -27,7 +27,6 @@ export default class Sprite extends Actor
 
         context.fillText(image,pos.x,pos.y);
         context.moveTo(0,0);
-        context.lineTo(this.GetPosition().x, this.GetPosition().y);
         context.stroke();
         /*context.restore();*/
     }

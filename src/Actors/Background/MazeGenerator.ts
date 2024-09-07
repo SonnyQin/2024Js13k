@@ -1,4 +1,4 @@
-import {Random, RandomInt, Vector2} from "../../Math";
+import {Random, RandomInt, Vector2, Zone} from "../../Math";
 import {paras} from "../../Parameters";
 
 export default class MazeGenerator
@@ -112,6 +112,11 @@ export default class MazeGenerator
     public GetLocation(pos:Vector2)
     {
         return new Vector2(pos.y*paras.blocklength+paras.blocklength/2,pos.x*paras.blocklength+paras.blocklength/2);
+    }
+
+    public GetWinZone()
+    {
+        return new Zone(this.GetLocation(this.GetEndPos()),paras.blocklength,paras.blocklength);
     }
 
     // @ts-ignore

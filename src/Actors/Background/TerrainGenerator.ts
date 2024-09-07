@@ -12,7 +12,6 @@ export default class TerrainGenerator
         MazeGenerator.Instance.DetermineSE();
     }
 
-
     static get Instance()
     {
         if(!this._Instance)

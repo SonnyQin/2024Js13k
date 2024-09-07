@@ -36,13 +36,13 @@ export class Background extends Sprite
                         ctx.fillStyle='grey';
                         break;
                     case 1:
-                        ctx.fillStyle='red';
+                        ctx.fillStyle='#DC143C';
                         break;
                     case 3:
-                        ctx.fillStyle='blue';
+                        ctx.fillStyle='#E3EDCD';
                         break;
                     case 4:
-                        ctx.fillStyle='yellow';
+                        ctx.fillStyle='#FFD700';
                         break;
                 }
                 ctx.fillRect(curx, cury, paras.blocklength, paras.blocklength);

@@ -17,24 +17,22 @@ class CollisionComponent extends Component_1.Component {
     }
     Update(deltaTime) {
         super.Update(deltaTime);
+        if (this.GetOwner().GetType() != Actor_1.Type.Player)
+            return;
         this.mCircleCollider.mPosition = this.GetOwner().GetPosition().Copy();
         //Check for Actors
         for (let actor of this.GetOwner().GetGame().GetActors()) {
-            //TODO May Optimize
-            if (actor != this.GetOwner() && actor) {
-                if (actor.GetType() == Actor_1.Type.Monster || actor.GetType() == Actor_1.Type.Player) {
-                    this.Notice(actor);
+            if (actor.GetType() == Actor_1.Type.Monster) {
+                if (actor != this.GetOwner() && actor) {
+                    // @ts-ignore
+                    if (actor.GetCollider().IntersectCircleCollider(this.GetCollider())) {
+                        MessageDispatcher_1.default.Instance.DispatchMsg(0, actor, this.GetOwner(), MessageType_1.MessageType.PM_LOSE);
+                        return;
+                    }
                 }
             }
         }
         //Check for terrain
-    }
-    Notice(actor) {
-        if (actor.GetCollider().IntersectCircleCollider(this.GetCollider())) {
-            //Only perform the OnCollide function of owner's self
-            MessageDispatcher_1.default.Instance.DispatchMsg(0, actor, this.GetOwner(), MessageType_1.MessageType.CM_COLLIDE);
-            //console.log("Collide");
-        }
     }
     SetSize(length) {
         this.mCircleCollider.mLength = length;

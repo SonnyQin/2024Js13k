@@ -92,6 +92,9 @@ class MazeGenerator {
     GetLocation(pos) {
         return new Math_1.Vector2(pos.y * Parameters_1.paras.blocklength + Parameters_1.paras.blocklength / 2, pos.x * Parameters_1.paras.blocklength + Parameters_1.paras.blocklength / 2);
     }
+    GetWinZone() {
+        return new Math_1.Zone(this.GetLocation(this.GetEndPos()), Parameters_1.paras.blocklength, Parameters_1.paras.blocklength);
+    }
     GetStartPos() {
         return this.mStartPos;
     }

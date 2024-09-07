@@ -36,6 +36,8 @@ const PlayerStates_1 = __importStar(require("../AI/StateMachine/States/PlayerSta
 const CollisionComponent_1 = __importDefault(require("../Components/CollisionComponent"));
 const Parameters_1 = require("../Parameters");
 const MazeGenerator_1 = __importDefault(require("./Background/MazeGenerator"));
+const MessageDispatcher_1 = __importDefault(require("../AI/Message/MessageDispatcher"));
+const MessageType_1 = require("../AI/Message/MessageType");
 //May not use mAssets, use SelectAssets Instead, and will hard code the
 //image in state
 class Player extends Sprite_1.default {
@@ -43,7 +45,7 @@ class Player extends Sprite_1.default {
         //hard code
         let pos = MazeGenerator_1.default.Instance.GetLocation(MazeGenerator_1.default.Instance.GetStartPos());
         super(game, 0, new Math_1.Vector2(pos.x, pos.y), 1.0);
-        this.mc = new MovementComponent_1.default(this, 100, 500);
+        this.mc = new MovementComponent_1.default(this, 100, Parameters_1.paras.PlayerNormalSpeed);
         this.sc = new SenseComponent_1.default(this);
         this.cc = new CollisionComponent_1.default(this, 100, Parameters_1.paras.PlayerSize);
         this.mStateMachine = new StateMachine_1.default(this);
@@ -54,8 +56,8 @@ class Player extends Sprite_1.default {
         this.mSelectImage = '😃';
         this.mSize = Parameters_1.paras.PlayerSize;
         this.mTiredness = 0;
-        this.mIsPursuited = false;
         this.mActive = false;
+        this.mPursuitMonsters = new Set();
     }
     ProcessInput(keyState) {
         if (keyState.leftbutton)
@@ -65,9 +67,11 @@ class Player extends Sprite_1.default {
     }
     Update(deltaTime) {
         super.Update(deltaTime);
+        console.log(this.GetPosition());
         this.mStateMachine.Update();
-        console.log(this.mTiredness);
-        console.log(this.IsPursuited());
+        if (MazeGenerator_1.default.Instance.GetWinZone().Inside(this.GetPosition())) {
+            MessageDispatcher_1.default.Instance.DispatchMsg(0, this, this, MessageType_1.MessageType.PM_WIN);
+        }
     }
     Draw(context) {
         this.DrawImage(context, this.mSelectImage, this.mSize);
@@ -93,6 +97,9 @@ class Player extends Sprite_1.default {
     GetSpeed() {
         return this.mc.GetForwardSpeed().Length();
     }
+    SetSpeed(speed) {
+        this.mc.SetMaxSpeed(speed);
+    }
     GetVelocity() {
         return this.mc.GetForwardSpeed();
     }
@@ -109,17 +116,17 @@ class Player extends Sprite_1.default {
         if (this.mTiredness > Parameters_1.paras.MaxTiredness)
             this.mTiredness = Parameters_1.paras.MaxTiredness;
     }
-    //Determine the velocity according to how tired
-    TiredVelocity() {
-    }
     GetCollider() {
         return this.cc.GetCollider();
     }
     IsPursuited() {
-        return this.mIsPursuited;
+        return this.mPursuitMonsters.size > 0;
     }
-    SetIsPursuited(is) {
-        this.mIsPursuited = is;
+    AddPursuit(monster) {
+        this.mPursuitMonsters.add(monster);
+    }
+    RemovePursuit(monster) {
+        this.mPursuitMonsters.delete(monster);
     }
 }
 exports.default = Player;

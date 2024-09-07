@@ -15,13 +15,20 @@ exports.paras = {
     "ClockSize": 97,
     "MonsterCollisionSize": 60, //Due to the blank in emojis
     "PlayerCollisionSize": 50,
-    "MonsterMaxForce": 500,
-    "MonsterMass": 5,
-    "MonsterMaxSpeed": 200,
+    "MonsterMaxForce": 600,
+    "MonsterMass": 2,
+    "MonsterMaxSpeed": 300,
     "MapR": 20,
     "MapC": 20,
     "POVLength": 303,
     "POVAngle": 120,
     "offset": -10,
+    "MinOpacity": -0.4,
+    "MaxOpacity": 1.1,
+    "OpacitySpeed": 0.005,
+    "PlayerNormalSpeed": 500,
+    "PlayerEscapeSpeed": 600,
+    "PlayerTiredSpeed": 400,
+    "PlayerReliefSpeed": 450,
 };
 //# sourceMappingURL=Parameters.js.map

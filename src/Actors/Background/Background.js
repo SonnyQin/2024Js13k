@@ -31,13 +31,13 @@ class Background extends Sprite_1.default {
                         ctx.fillStyle = 'grey';
                         break;
                     case 1:
-                        ctx.fillStyle = 'red';
+                        ctx.fillStyle = '#DC143C';
                         break;
                     case 3:
-                        ctx.fillStyle = 'blue';
+                        ctx.fillStyle = '#E3EDCD';
                         break;
                     case 4:
-                        ctx.fillStyle = 'yellow';
+                        ctx.fillStyle = '#FFD700';
                         break;
                 }
                 ctx.fillRect(curx, cury, Parameters_1.paras.blocklength, Parameters_1.paras.blocklength);
