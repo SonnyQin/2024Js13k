@@ -8,14 +8,10 @@ const Background_1 = require("./Actors/Background/Background");
 const InputManager_1 = __importDefault(require("./InputManager"));
 const MessageDispatcher_1 = __importDefault(require("./AI/Message/MessageDispatcher"));
 const Player_1 = __importDefault(require("./Actors/Player"));
-const Clock_1 = __importDefault(require("./Actors/Monsters/Clock"));
-const Math_1 = require("./Math");
 const HUD_1 = __importDefault(require("./UI/UIScreens/HUD"));
 const MazeGenerator_1 = __importDefault(require("./Actors/Background/MazeGenerator"));
 const Camera_1 = __importDefault(require("./Camera/Camera"));
 const TerrainGenerator_1 = __importDefault(require("./Actors/Background/TerrainGenerator"));
-const Fog_1 = __importDefault(require("./Camera/Fog"));
-const Treasure_1 = __importDefault(require("./Actors/Monsters/Treasure"));
 class Game {
     constructor() {
         this.mIsRunning = true;
@@ -45,13 +41,11 @@ class Game {
             console.log("Unable to create Context");
             return;
         }
-        TerrainGenerator_1.default.Instance;
+        TerrainGenerator_1.default.Instance.Generate(this);
         InputManager_1.default.Instance;
-        this.mFog = new Fog_1.default(this);
         new Background_1.Background(this, MazeGenerator_1.default.Instance.GetMapArr());
         this.mPlayer = new Player_1.default(this);
-        new Clock_1.default(this, 1, new Math_1.Vector2(500, 500), 1.0, true);
-        new Treasure_1.default(this, 1, MazeGenerator_1.default.Instance.GetWinZone().mPosition, 1.0);
+        //new Clock(this,1,new Vector2(500,500),1.0,true);
     }
     RunLoop() {
         this.ProcessInput();

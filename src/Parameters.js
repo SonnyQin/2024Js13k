@@ -10,11 +10,11 @@ exports.paras = {
     "EscapeTiredness": 0.2,
     "MaxTiredness": 200,
     "blocklength": 256,
-    "PlayerSize": 79,
+    "PlayerSize": 100,
     "MonsterSize": 97,
     "ClockSize": 97,
     "MonsterCollisionSize": 60, //Due to the blank in emojis
-    "PlayerCollisionSize": 50,
+    "PlayerCollisionSize": 80,
     "MonsterMaxForce": 600,
     "MonsterMass": 2,
     "MonsterMaxSpeed": 300,
@@ -26,9 +26,9 @@ exports.paras = {
     "MinOpacity": -0.4,
     "MaxOpacity": 1.1,
     "OpacitySpeed": 0.005,
-    "PlayerNormalSpeed": 500,
-    "PlayerEscapeSpeed": 600,
-    "PlayerTiredSpeed": 400,
-    "PlayerReliefSpeed": 450,
+    "PlayerNormalSpeed": 200,
+    "PlayerEscapeSpeed": 300,
+    "PlayerTiredSpeed": 100,
+    "PlayerReliefSpeed": 150,
 };
 //# sourceMappingURL=Parameters.js.map

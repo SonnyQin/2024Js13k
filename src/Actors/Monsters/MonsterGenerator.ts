@@ -1,4 +1,7 @@
 //Containing all types of monsters
+import {Difficulty, DifficultyInfo} from "../Background/TerrainGenerator";
+import {Game} from "../../Game";
+
 export enum MonsterList
 {
 
@@ -7,6 +10,11 @@ export enum MonsterList
 export default class MonsterGenerator
 {
     constructor()
+    {
+
+    }
+
+    public Generate(game:Game, info)
     {
 
     }

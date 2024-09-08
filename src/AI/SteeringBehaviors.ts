@@ -48,7 +48,6 @@ export default class SteeringBehaviors
         }
 
 
-
         let LookAheadTime=0;
         if(evader.GetSpeed()!=0)
         {

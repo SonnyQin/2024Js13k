@@ -53,16 +53,13 @@ export class Game
             return;
         }
 
-        TerrainGenerator.Instance;
+        TerrainGenerator.Instance.Generate(this);
 
         InputManager.Instance;
 
-        this.mFog=new Fog(this);
-
         new Background(this, MazeGenerator.Instance.GetMapArr());
         this.mPlayer=new Player(this);
-        new Clock(this,1,new Vector2(500,500),1.0,true);
-        new Treasure(this,1,MazeGenerator.Instance.GetWinZone().mPosition,1.0);
+        //new Clock(this,1,new Vector2(500,500),1.0,true);
 
     }
 

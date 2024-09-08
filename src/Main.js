@@ -6,6 +6,8 @@ var game = new Game_1.Game();
 game.Initialize();
 var globalID;
 function animate() {
+    if (!game.mIsRunning)
+        return;
     game.RunLoop();
     /*    if(!game.mIsRunning)
             return;*/

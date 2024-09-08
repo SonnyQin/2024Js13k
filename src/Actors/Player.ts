@@ -1,7 +1,7 @@
 import Sprite from "./Sprite";
 import {Game} from "../Game";
 import InputManager from "../InputManager";
-import {Vector2, Zone} from "../Math";
+import {Vector2, VmiV, Zone} from "../Math";
 import MovementComponent from "../Components/MovementComponent";
 import StateMachine from "../AI/StateMachine/StateMachine";
 import Telegram from "../AI/Message/Telegram";
@@ -14,6 +14,7 @@ import MazeGenerator from "./Background/MazeGenerator";
 import MessageDispatcher from "../AI/Message/MessageDispatcher";
 import {MessageType} from "../AI/Message/MessageType";
 import MonsterBase from "./Monsters/MonsterBase";
+import WallComponent from "../Components/WallComponent";
 //May not use mAssets, use SelectAssets Instead, and will hard code the
 //image in state
 export default class Player extends Sprite
@@ -26,7 +27,8 @@ export default class Player extends Sprite
 
         this.mc=new MovementComponent(this,100,paras.PlayerNormalSpeed);
         this.sc=new SenseComponent(this);
-        this.cc=new CollisionComponent(this, 100, paras.PlayerSize);
+        this.cc=new CollisionComponent(this, 100, paras.PlayerCollisionSize);
+        this.wc=new WallComponent(this);
 
         this.mStateMachine=new StateMachine<Player>(this);
         this.mStateMachine.SetGlobalState(PlayerGlobalState.Instance);
@@ -53,7 +55,7 @@ export default class Player extends Sprite
     public Update(deltaTime: number)
     {
         super.Update(deltaTime);
-        console.log(this.GetPosition());
+        //console.log(this.GetPosition());
         this.mStateMachine.Update();
         if(MazeGenerator.Instance.GetWinZone().Inside(this.GetPosition()))
         {
@@ -63,14 +65,30 @@ export default class Player extends Sprite
 
     public Draw(context: CanvasRenderingContext2D)
     {
-        this.DrawImage(context, this.mSelectImage, this.mSize);
-        let pos=this.GetGame().GetCamera().TransformToView(this.GetPosition());
-        context.arc(pos.x, pos.y, this.mSize,0,2*Math.PI);
+        let b=context.measureText(this.mSelectImage);
+        this.DrawImage(context, this.mSelectImage, paras.PlayerSize);
+        let pos=this.TransformToView();
+        context.arc(pos.x, pos.y, paras.PlayerCollisionSize,0,2*Math.PI);
         context.stroke();
+        context.closePath();
 
         context.moveTo(0,0);
         context.lineTo(pos.x,pos.y);
         context.stroke();
+
+        const playerSize = paras.PlayerSize; // 矩形的一半边长
+        // 计算矩形的大小和位置
+        const rectSize = playerSize * 2; // 矩形的边长
+        const rectX = pos.x - playerSize; // 矩形的左上角 x 坐标
+        const rectY = pos.y - playerSize; // 矩形的左上角 y 坐标
+
+        // 绘制矩形
+        context.beginPath();
+        context.rect(rectX, rectY, rectSize, rectSize);
+        context.strokeStyle = 'blue'; // 矩形的边框颜色
+        context.lineWidth = 2; // 矩形的边框宽度
+        context.stroke();
+        context.closePath();
     }
     
     public HandleMessage(telegram: Telegram): boolean
@@ -82,6 +100,7 @@ export default class Player extends Sprite
     private mc:MovementComponent;
     private sc:SenseComponent;
     private cc:CollisionComponent;
+    private wc:WallComponent;
     private mStateMachine:StateMachine<Player>;
 
     private mSelectImage:string;
@@ -116,9 +135,27 @@ export default class Player extends Sprite
         return this.mc.GetForwardSpeed().Length();
     }
 
-    public SetSpeed(speed:number)
+    public SetMaxSpeed(speed:number)
     {
         this.mc.SetMaxSpeed(speed);
+    }
+
+    public StopMoving(deltatime: number, Wall: Vector2)
+    {
+        // 获取当前角色位置并复制
+        let pos = this.GetPosition().Copy();
+
+        // 计算从墙壁到角色位置的向量，并标准化
+        let WallToPos = (VmiV(pos, Wall)).Normalize();
+
+        // 计算调整量
+        // 注意：deltatime * this.GetSpeed() 表示在这段时间内的移动距离
+        let adjustment = WallToPos.Multiply(deltatime * 1.5*this.GetSpeed());
+        // 更新位置
+        pos.AddVec(adjustment);
+
+        // 设置新位置
+        this.SetPosition(pos);
     }
 
     public GetVelocity():Vector2

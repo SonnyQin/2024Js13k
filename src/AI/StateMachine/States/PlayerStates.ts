@@ -5,6 +5,11 @@ import {MessageType} from "../../Message/MessageType";
 import {paras} from "../../../Parameters";
 import MessageDispatcher from "../../Message/MessageDispatcher";
 
+function Check(owner:Player)
+{
+    return owner.GetFSM().isInState(PSWIN.Instance) || owner.GetFSM().isInState(PSLOSE.Instance);
+
+}
 export default class PlayerGlobalState extends State<Player>
 {
     constructor() {
@@ -18,14 +23,12 @@ export default class PlayerGlobalState extends State<Player>
 
     Execute(owner: Player)
     {
-        if(owner.GetFSM().isInState(PSWIN.Instance)||owner.GetFSM().isInState(PSLOSE.Instance))
+        if(Check(owner))
             return;
         if(owner.GetTiredness()>paras.TThre)
         {
             owner.GetFSM().ChangeState(PSTired.Instance);
         }
-        if(owner.GetFSM().GetCurrentState())
-            console.log(owner.GetFSM().GetCurrentState());
     }
 
     Exit(owner: Player | null) {
@@ -37,25 +40,30 @@ export default class PlayerGlobalState extends State<Player>
         switch (msg.mMsg)
         {
             case MessageType.PM_NORMAL:
+                if(!Check(owner))
                 owner.GetFSM().ChangeState(PSNormal.Instance);
                 return true;
             case MessageType.PM_ALERT:
                 owner.AddPursuit(msg.mSender);
                 //If already in EScape state, Ignore Alert
                 if(!owner.GetFSM().isInState(PSEscape.Instance))
+                    if(!Check(owner))
                     owner.GetFSM().ChangeState(PSAlert.Instance);
                 return true;
             case MessageType.PM_ESCAPE:
                 owner.AddPursuit(msg.mSender);
+                if(!Check(owner))
                 owner.GetFSM().ChangeState(PSEscape.Instance);
                 return true;
             case MessageType.PM_WIN:
+                if(!Check(owner))
                 owner.GetFSM().ChangeState(PSWIN.Instance);
-                MessageDispatcher.Instance.DispatchMsg(300,owner,owner,MessageType.GAMELOSE);
+                MessageDispatcher.Instance.DispatchMsg(3000,owner,owner,MessageType.GAMELOSE);
                 return true;
             case MessageType.PM_LOSE:
+                if(!Check(owner))
                 owner.GetFSM().ChangeState(PSLOSE.Instance);
-                MessageDispatcher.Instance.DispatchMsg(300,owner,owner,MessageType.GAMELOSE);
+                MessageDispatcher.Instance.DispatchMsg(3000,owner,owner,MessageType.GAMELOSE);
                 return true;
             case MessageType.GAMEWIN:
                 owner.GetGame().Stop();
@@ -72,15 +80,18 @@ export default class PlayerGlobalState extends State<Player>
                 {
                     if(owner.GetTiredness()>paras.TThre)
                     {
+                        if(!Check(owner))
                         owner.GetFSM().ChangeState(PSTired.Instance);
                     }
                     else
                     if(owner.GetTiredness()<paras.TThre&&owner.GetTiredness()>paras.TRThre)
                     {
+                        if(!Check(owner))
                         owner.GetFSM().ChangeState(PSRelief.Instance);
                     }
                     else
                     {
+                        if(!Check(owner))
                         owner.GetFSM().ChangeState(PSNormal.Instance);
                     }
                 }
@@ -115,7 +126,7 @@ export class PSNormal extends State<Player>
     {
         super.Enter(owner);
         owner.SetSelectImage('😃');
-        owner.SetSpeed(paras.PlayerNormalSpeed);
+        owner.SetMaxSpeed(paras.PlayerNormalSpeed);
     }
 
     Execute(owner: Player)
@@ -146,7 +157,7 @@ export class PSAlert extends State<Player>
     Enter(owner: Player)
     {
         owner.SetSelectImage('😨');
-        owner.SetSpeed(paras.PlayerReliefSpeed);
+        owner.SetMaxSpeed(paras.PlayerReliefSpeed);
 
     }
 
@@ -178,7 +189,7 @@ export class PSEscape extends State<Player>
 
     Enter(owner: Player) {
         owner.SetSelectImage('😱');
-        owner.SetSpeed(paras.PlayerEscapeSpeed);
+        owner.SetMaxSpeed(paras.PlayerEscapeSpeed);
     }
 
     Execute(owner: Player)
@@ -204,7 +215,7 @@ export class PSTired extends State<Player>
 
     Enter(owner: Player) {
         owner.SetSelectImage('🥵');
-        owner.SetSpeed(paras.PlayerTiredSpeed);
+        owner.SetMaxSpeed(paras.PlayerTiredSpeed);
     }
 
     Execute(owner: Player)
@@ -233,7 +244,7 @@ export class PSRelief extends State<Player>
 
     Enter(owner: Player) {
         owner.SetSelectImage('🥶');
-        owner.SetSpeed(paras.PlayerReliefSpeed);
+        owner.SetMaxSpeed(paras.PlayerReliefSpeed);
     }
     Execute(owner: Player)
     {
@@ -258,7 +269,7 @@ export class PSWIN extends State<Player>
 
     Enter(owner: Player) {
         owner.SetSelectImage('🥳');
-        owner.SetSpeed(paras.PlayerNormalSpeed);
+        owner.SetMaxSpeed(paras.PlayerNormalSpeed);
     }
 
     private static _Instance:PSWIN;
@@ -279,7 +290,7 @@ export class PSLOSE extends State<Player>
 
     Enter(owner: Player) {
         owner.SetSelectImage('😭');
-        owner.SetSpeed(paras.PlayerNormalSpeed);
+        owner.SetMaxSpeed(paras.PlayerNormalSpeed);
     }
 
     private static _Instance:PSLOSE;

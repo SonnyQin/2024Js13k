@@ -137,6 +137,18 @@ class Zone {
     IntersectZone(b) {
         return this.DownRight.x > b.UpLeft.x && this.UpLeft.x < b.DownRight.x && this.DownRight.y > b.UpLeft.y && this.UpLeft.y < b.DownRight.y;
     }
+    IntersectCircleCollider(circle) {
+        // Find the nearest point on the rectangle to the circle's center
+        const nearestX = Math.max(this.UpLeft.x, Math.min(circle.mPosition.x, this.DownRight.x));
+        const nearestY = Math.max(this.UpLeft.y, Math.min(circle.mPosition.y, this.DownRight.y));
+        // Calculate the distance between the nearest point and the circle's center
+        const deltaX = circle.mPosition.x - nearestX;
+        const deltaY = circle.mPosition.y - nearestY;
+        // Check if the distance squared is less than the radius squared
+        const distanceSq = deltaX * deltaX + deltaY * deltaY;
+        const radiusSq = circle.mLength * circle.mLength;
+        return distanceSq < radiusSq;
+    }
     get DownRight() {
         return new Vector2(this.mPosition.x + this.mWidth / 2, this.mPosition.y + this.mLength / 2);
     }
