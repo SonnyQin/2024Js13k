@@ -22,10 +22,10 @@ class CollisionComponent extends Component_1.Component {
         this.mCircleCollider.mPosition = this.GetOwner().GetPosition().Copy();
         //Check for Actors
         for (let actor of this.GetOwner().GetGame().GetActors()) {
-            if (actor.GetType() == Actor_1.Type.Monster) {
-                if (actor != this.GetOwner() && actor) {
-                    // @ts-ignore
-                    if (actor.GetCollider().IntersectCircleCollider(this.GetCollider())) {
+            // @ts-ignore
+            if (actor.GetCollider().IntersectCircleCollider(this.GetCollider())) {
+                if (actor.GetType() == Actor_1.Type.Monster) {
+                    if (actor != this.GetOwner() && actor) {
                         MessageDispatcher_1.default.Instance.DispatchMsg(0, actor, this.GetOwner(), MessageType_1.MessageType.PM_LOSE);
                         return;
                     }

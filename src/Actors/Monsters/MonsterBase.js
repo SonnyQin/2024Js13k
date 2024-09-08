@@ -51,7 +51,7 @@ class MonsterBase extends Sprite_1.default {
         this.mIsHide = true;
         this.SetType(Actor_1.Type.Monster);
         this.mc = new MovementComponent_1.default(this, 100, 150);
-        this.cc = new CollisionComponent_1.default(this, 100, Parameters_1.paras.MonsterSize);
+        this.cc = new CollisionComponent_1.default(this, 100, Parameters_1.paras.MonsterCollisionSize);
     }
     Update(deltaTime) {
         super.Update(deltaTime);

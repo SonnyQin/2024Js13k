@@ -4,9 +4,9 @@ import {Vector2} from "../../Math";
 
 export default class Treasure extends MonsterBase
 {
-    constructor(game:Game,drawOrder:number=1, pos:Vector2,scale:number)
+    constructor(game:Game,drawOrder:number=1, pos:Vector2,scale:number, IsEvil:boolean)
     {
-        super(game,drawOrder,pos,scale,true);
+        super(game,drawOrder,pos,scale,IsEvil);
         this.mAssets={'🍉':97};
     }
 }

@@ -57,9 +57,7 @@ export class Game
 
         InputManager.Instance;
 
-        new Background(this, MazeGenerator.Instance.GetMapArr());
-        this.mPlayer=new Player(this);
-        //new Clock(this,1,new Vector2(500,500),1.0,true);
+        new Clock(this,1,new Vector2(600,600),1.0,true);
 
     }
 
@@ -195,5 +193,10 @@ export class Game
     public LOSE()
     {
         this.mResult=false;
+    }
+
+    public SetPlayer(player:Player)
+    {
+        this.mPlayer=player;
     }
 }

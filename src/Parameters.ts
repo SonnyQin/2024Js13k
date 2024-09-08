@@ -10,7 +10,7 @@ export let paras={
     "PlayerSize":100,
     "MonsterSize":97,
     "ClockSize":97,
-    "MonsterCollisionSize":60,  //Due to the blank in emojis
+    "MonsterCollisionSize":50,  //Due to the blank in emojis
     "PlayerCollisionSize":80,
     "MonsterMaxForce":600,
     "MonsterMass":2,

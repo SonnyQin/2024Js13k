@@ -71,24 +71,6 @@ export default class Player extends Sprite
         context.arc(pos.x, pos.y, paras.PlayerCollisionSize,0,2*Math.PI);
         context.stroke();
         context.closePath();
-
-        context.moveTo(0,0);
-        context.lineTo(pos.x,pos.y);
-        context.stroke();
-
-        const playerSize = paras.PlayerSize; // 矩形的一半边长
-        // 计算矩形的大小和位置
-        const rectSize = playerSize * 2; // 矩形的边长
-        const rectX = pos.x - playerSize; // 矩形的左上角 x 坐标
-        const rectY = pos.y - playerSize; // 矩形的左上角 y 坐标
-
-        // 绘制矩形
-        context.beginPath();
-        context.rect(rectX, rectY, rectSize, rectSize);
-        context.strokeStyle = 'blue'; // 矩形的边框颜色
-        context.lineWidth = 2; // 矩形的边框宽度
-        context.stroke();
-        context.closePath();
     }
     
     public HandleMessage(telegram: Telegram): boolean

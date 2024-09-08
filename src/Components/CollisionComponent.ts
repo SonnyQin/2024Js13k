@@ -23,12 +23,12 @@ export default class CollisionComponent extends Component
         //Check for Actors
         for(let actor of this.GetOwner().GetGame().GetActors())
         {
-            if(actor.GetType()==Type.Monster)
+            // @ts-ignore
+            if(actor.GetCollider().IntersectCircleCollider(this.GetCollider()))
             {
-                if(actor!=this.GetOwner()&&actor)
+                if(actor.GetType()==Type.Monster)
                 {
-                    // @ts-ignore
-                    if(actor.GetCollider().IntersectCircleCollider(this.GetCollider()))
+                    if(actor!=this.GetOwner()&&actor)
                     {
                         MessageDispatcher.Instance.DispatchMsg(0,actor, this.GetOwner(), MessageType.PM_LOSE);
                         return;

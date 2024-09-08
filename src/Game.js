@@ -4,12 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Game = void 0;
-const Background_1 = require("./Actors/Background/Background");
 const InputManager_1 = __importDefault(require("./InputManager"));
 const MessageDispatcher_1 = __importDefault(require("./AI/Message/MessageDispatcher"));
-const Player_1 = __importDefault(require("./Actors/Player"));
+const Clock_1 = __importDefault(require("./Actors/Monsters/Clock"));
+const Math_1 = require("./Math");
 const HUD_1 = __importDefault(require("./UI/UIScreens/HUD"));
-const MazeGenerator_1 = __importDefault(require("./Actors/Background/MazeGenerator"));
 const Camera_1 = __importDefault(require("./Camera/Camera"));
 const TerrainGenerator_1 = __importDefault(require("./Actors/Background/TerrainGenerator"));
 class Game {
@@ -43,9 +42,7 @@ class Game {
         }
         TerrainGenerator_1.default.Instance.Generate(this);
         InputManager_1.default.Instance;
-        new Background_1.Background(this, MazeGenerator_1.default.Instance.GetMapArr());
-        this.mPlayer = new Player_1.default(this);
-        //new Clock(this,1,new Vector2(500,500),1.0,true);
+        new Clock_1.default(this, 1, new Math_1.Vector2(600, 600), 1.0, true);
     }
     RunLoop() {
         this.ProcessInput();
@@ -123,6 +120,9 @@ class Game {
     }
     LOSE() {
         this.mResult = false;
+    }
+    SetPlayer(player) {
+        this.mPlayer = player;
     }
 }
 exports.Game = Game;

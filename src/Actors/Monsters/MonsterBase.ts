@@ -29,7 +29,7 @@ export default class MonsterBase extends Sprite
         this.SetType(Type.Monster);
 
         this.mc=new MovementComponent(this,100,150);
-        this.cc=new CollisionComponent(this, 100, paras.MonsterSize);
+        this.cc=new CollisionComponent(this, 100, paras.MonsterCollisionSize);
     }
 
     public Update(deltaTime: number)

@@ -5,6 +5,8 @@ import {paras} from "../../Parameters";
 import {Vector2} from "../../Math";
 import { Game } from "../../Game";
 import Fog from "../../Camera/Fog";
+import {Background} from "./Background";
+import Player from "../Player";
 
 export enum Difficulty
 {
@@ -16,19 +18,19 @@ export enum Difficulty
 export let DifficultyInfo=
     {
         0:{
-            numOfObject:10,
+            numOfObjects:10,
             numOfMonsters:10,
             mapSize:10,
             isFogged:false,
         },
         1:{
-            numOfObject:20,
+            numOfObjects:20,
             numOfMonsters:15,
             mapSize: 20,
             isFogged: false,
         },
         2:{
-            numOfObject:40,
+            numOfObjects:40,
             numOfMonsters:35,
             mapSize:40,
             isFogged:true,
@@ -50,10 +52,14 @@ export default class TerrainGenerator
         MazeGenerator.Instance.creatMap(info.mapSize, info.mapSize);
         MazeGenerator.Instance.DetermineSE();
 
+        game.SetPlayer(new Player(game));
+
+        new Background(game, MazeGenerator.Instance.GetMapArr());
+
         if(info.isFogged)
             new Fog(game);
 
-        MonsterGenerator.Instance.Generate(game, info);
+        //MonsterGenerator.Instance.Generate(game, info);
 
     }
 

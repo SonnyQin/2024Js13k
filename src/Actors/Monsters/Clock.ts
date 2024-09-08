@@ -20,7 +20,6 @@ export default class Clock extends MonsterBase
     //
     protected UpdateActor(deltaTime: number)
     {
-        console.log(this.GetPosition());
         if(Date.now()-this.mLastFrameTime>this.mDisplayTime)
         {
             this.count++;

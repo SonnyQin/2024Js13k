@@ -6,8 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DifficultyInfo = exports.Difficulty = void 0;
 //Randomly generating terrains for different time player start the game
 const MazeGenerator_1 = __importDefault(require("./MazeGenerator"));
-const MonsterGenerator_1 = __importDefault(require("../Monsters/MonsterGenerator"));
 const Fog_1 = __importDefault(require("../../Camera/Fog"));
+const Background_1 = require("./Background");
+const Player_1 = __importDefault(require("../Player"));
 var Difficulty;
 (function (Difficulty) {
     Difficulty[Difficulty["Easy"] = 0] = "Easy";
@@ -16,19 +17,19 @@ var Difficulty;
 })(Difficulty || (exports.Difficulty = Difficulty = {}));
 exports.DifficultyInfo = {
     0: {
-        numOfObject: 10,
+        numOfObjects: 10,
         numOfMonsters: 10,
         mapSize: 10,
         isFogged: false,
     },
     1: {
-        numOfObject: 20,
+        numOfObjects: 20,
         numOfMonsters: 15,
         mapSize: 20,
         isFogged: false,
     },
     2: {
-        numOfObject: 40,
+        numOfObjects: 40,
         numOfMonsters: 35,
         mapSize: 40,
         isFogged: true,
@@ -43,9 +44,11 @@ class TerrainGenerator {
         let info = exports.DifficultyInfo[this.mDifficulty];
         MazeGenerator_1.default.Instance.creatMap(info.mapSize, info.mapSize);
         MazeGenerator_1.default.Instance.DetermineSE();
+        game.SetPlayer(new Player_1.default(game));
+        new Background_1.Background(game, MazeGenerator_1.default.Instance.GetMapArr());
         if (info.isFogged)
             new Fog_1.default(game);
-        MonsterGenerator_1.default.Instance.Generate(game, info);
+        //MonsterGenerator.Instance.Generate(game, info);
     }
     AddDifficulty() {
         this.mDifficulty++;
