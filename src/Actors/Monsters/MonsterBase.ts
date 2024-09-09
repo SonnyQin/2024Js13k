@@ -18,24 +18,42 @@ export default class MonsterBase extends Sprite
     constructor(game:Game,drawOrder:number=1, pos:Vector2,scale:number,isEvil:boolean)
     {
         super(game,drawOrder,pos);
-        this.mIsEvil=true;
+        this.mIsEvil=isEvil;
         this.mSteeringBehaviors=new SteeringBehaviors(this);
         //先这么写
         this.mOffset=new Vector2();
-        this.mStateMachine=new StateMachine<MonsterBase>(this);
-        this.mStateMachine.SetGlobalState(MonsterGlobalState.Instance);
-        this.mStateMachine.SetCurrentState(MSHiding.Instance);
+        if(this.mIsEvil)
+        {
+            this.mStateMachine=new StateMachine<MonsterBase>(this);
+            this.mStateMachine.SetGlobalState(MonsterGlobalState.Instance);
+            this.mStateMachine.SetCurrentState(MSHiding.Instance);
+        }
+
         this.mIsHide=true;
         this.SetType(Type.Monster);
 
         this.mc=new MovementComponent(this,100,150);
         this.cc=new CollisionComponent(this, 100, paras.MonsterCollisionSize);
+        this.mBornTime=Date.now();
+        this.mActive=false;
+    }
+
+    private CheckLifeSpan()
+    {
+        if(Date.now()-this.mBornTime>paras.MonsterLifeSpan)
+        {
+            this.GetGame().RemoveActor(this);
+        }
     }
 
     public Update(deltaTime: number)
     {
         super.Update(deltaTime);
-        this.mStateMachine.Update();
+
+        this.CheckLifeSpan();
+
+        if(this.mIsEvil)
+            this.mStateMachine.Update();
         let SteeringForce=this.mSteeringBehaviors.Calculate().Copy();
 
         let Acceleration= VdN(SteeringForce,paras.MonsterMass);
@@ -55,7 +73,7 @@ export default class MonsterBase extends Sprite
         }
 
         let pos=this.GetGame().GetCamera().TransformToView(this.GetPosition());
-        context.arc(pos.x, pos.y, paras.MonsterSize,0,2*Math.PI);
+        context.arc(pos.x, pos.y, paras.MonsterCollisionSize,0,2*Math.PI);
         context.stroke();
     }
 
@@ -78,6 +96,7 @@ export default class MonsterBase extends Sprite
     private mSteeringBehaviors:SteeringBehaviors;
     //The offset of red 13, hard code in derived classes
     protected mOffset:Vector2;
+    // @ts-ignore
     private mStateMachine:StateMachine<MonsterBase>;
     //Whether the 13 label is hidden or not
     protected mIsHide:boolean;
@@ -85,6 +104,9 @@ export default class MonsterBase extends Sprite
     //Components
     private mc:MovementComponent;
     private cc:CollisionComponent;
+
+    private mBornTime;
+    private mActive:boolean;
 
     public GetFSM():StateMachine<MonsterBase>
     {
@@ -109,5 +131,20 @@ export default class MonsterBase extends Sprite
     public GetSteering()
     {
         return this.mSteeringBehaviors;
+    }
+
+    public GetIsEvil()
+    {
+        return this.mIsEvil;
+    }
+
+    public GetActive()
+    {
+        return this.mActive;
+    }
+
+    public SetActive(active:boolean)
+    {
+        this.mActive=active;
     }
 }

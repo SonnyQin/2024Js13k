@@ -16,6 +16,7 @@ class MessageDispatcher {
     }
     Discharge(receiver, telegram) {
         if (!receiver.HandleMessage(telegram)) {
+            console.log(telegram.mMsg);
             console.log("Message unhandled");
         }
     }

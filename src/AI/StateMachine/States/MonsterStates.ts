@@ -21,6 +21,7 @@ export default class MonsterGlobalState extends State<MonsterBase>
         switch (msg.mMsg)
         {
             case MessageType.MM_PERSUIT:
+                owner.SetActive(true);
                 if(!owner.GetFSM().isInState(MSPursuiting.Instance))
                 {
                     owner.GetFSM().ChangeState(MSPursuiting.Instance);

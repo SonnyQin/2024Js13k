@@ -17,9 +17,13 @@ class Sprite extends Actor_1.Actor {
         context.translate(this.GetPosition().x, this.GetPosition().y);
         context.rotate(this.GetRotation());*/
         let pos = this.TransformToView();
+        // @ts-ignore
+        if (this.GetType() == Actor_1.Type.Monster && this.GetActive())
+            context.globalAlpha = 0.85;
         context.fillText(image, pos.x, pos.y);
         context.moveTo(0, 0);
         context.stroke();
+        context.globalAlpha = 1;
         /*context.restore();*/
     }
     //Use the first image of assets to draw in default

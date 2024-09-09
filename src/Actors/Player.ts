@@ -33,6 +33,8 @@ export default class Player extends Sprite
         this.mStateMachine=new StateMachine<Player>(this);
         this.mStateMachine.SetGlobalState(PlayerGlobalState.Instance);
         this.mStateMachine.SetCurrentState(PSNormal.Instance);
+        //Additional Enter to trigger the sound initially
+        PSNormal.Instance.Enter(this);
 
         this.SetType(Type.Player);
 

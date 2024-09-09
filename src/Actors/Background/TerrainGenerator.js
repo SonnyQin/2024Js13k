@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DifficultyInfo = exports.Difficulty = void 0;
 //Randomly generating terrains for different time player start the game
 const MazeGenerator_1 = __importDefault(require("./MazeGenerator"));
+const MonsterGenerator_1 = __importDefault(require("../Monsters/MonsterGenerator"));
 const Fog_1 = __importDefault(require("../../Camera/Fog"));
 const Background_1 = require("./Background");
 const Player_1 = __importDefault(require("../Player"));
@@ -48,7 +49,7 @@ class TerrainGenerator {
         new Background_1.Background(game, MazeGenerator_1.default.Instance.GetMapArr());
         if (info.isFogged)
             new Fog_1.default(game);
-        //MonsterGenerator.Instance.Generate(game, info);
+        MonsterGenerator_1.default.Instance.Generate(game, info);
     }
     AddDifficulty() {
         this.mDifficulty++;

@@ -6,8 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Game = void 0;
 const InputManager_1 = __importDefault(require("./InputManager"));
 const MessageDispatcher_1 = __importDefault(require("./AI/Message/MessageDispatcher"));
-const Clock_1 = __importDefault(require("./Actors/Monsters/Clock"));
-const Math_1 = require("./Math");
 const HUD_1 = __importDefault(require("./UI/UIScreens/HUD"));
 const Camera_1 = __importDefault(require("./Camera/Camera"));
 const TerrainGenerator_1 = __importDefault(require("./Actors/Background/TerrainGenerator"));
@@ -42,7 +40,7 @@ class Game {
         }
         TerrainGenerator_1.default.Instance.Generate(this);
         InputManager_1.default.Instance;
-        new Clock_1.default(this, 1, new Math_1.Vector2(600, 600), 1.0, true);
+        //new Clock(this,1,new Vector2(600,600),1.0,true);
     }
     RunLoop() {
         this.ProcessInput();

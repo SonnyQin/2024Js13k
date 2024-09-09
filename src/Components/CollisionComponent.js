@@ -13,7 +13,7 @@ const MessageType_1 = require("../AI/Message/MessageType");
 class CollisionComponent extends Component_1.Component {
     constructor(actor, updateOrder = 100, length) {
         super(actor, updateOrder);
-        this.mCircleCollider = new Math_1.CircleCollider(this.GetOwner().GetPosition().Copy(), length);
+        this.mCircleCollider = new Math_1.CircleCollider(this.GetOwner().GetPosition(), length);
     }
     Update(deltaTime) {
         super.Update(deltaTime);
@@ -22,10 +22,10 @@ class CollisionComponent extends Component_1.Component {
         this.mCircleCollider.mPosition = this.GetOwner().GetPosition().Copy();
         //Check for Actors
         for (let actor of this.GetOwner().GetGame().GetActors()) {
-            // @ts-ignore
-            if (actor.GetCollider().IntersectCircleCollider(this.GetCollider())) {
-                if (actor.GetType() == Actor_1.Type.Monster) {
-                    if (actor != this.GetOwner() && actor) {
+            if (actor.GetType() == Actor_1.Type.Monster) {
+                // @ts-ignore
+                if (actor.GetCollider().IntersectCircleCollider(this.GetCollider())) {
+                    if (actor != this.GetOwner() && actor && actor.GetIsEvil()) {
                         MessageDispatcher_1.default.Instance.DispatchMsg(0, actor, this.GetOwner(), MessageType_1.MessageType.PM_LOSE);
                         return;
                     }

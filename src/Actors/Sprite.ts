@@ -1,7 +1,8 @@
-import {Actor} from "./Actor";
+import {Actor, Type} from "./Actor";
 import {Game} from "../Game";
 import {Vector2} from "../Math";
 import Telegram from "../AI/Message/Telegram";
+import MonsterBase from "./Monsters/MonsterBase";
 
 //Using several emojis and other manually modification to render
 export default class Sprite extends Actor
@@ -25,9 +26,15 @@ export default class Sprite extends Actor
 
         let pos=this.TransformToView();
 
+        // @ts-ignore
+        if(this.GetType()==Type.Monster&&(this as MonsterBase).GetActive())
+            context.globalAlpha=0.85;
+
         context.fillText(image,pos.x,pos.y);
         context.moveTo(0,0);
         context.stroke();
+
+        context.globalAlpha=1;
         /*context.restore();*/
     }
 

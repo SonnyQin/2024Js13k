@@ -21,7 +21,6 @@ export enum MonsterList
     Clock,
     Disk,
     Light,
-    Treasure,
     Watermelon,
     LENGTH,
 }
@@ -81,18 +80,16 @@ export default class MonsterGenerator
             case 4:
                 return new Light(game, 1,this.RandomLocation(),this.RandomScale(),isEvil);
             case 5:
-                return new Treasure(game, 1,this.RandomLocation(),this.RandomScale(),isEvil);
-            case 6:
                 return new Watermelon(game, 1,this.RandomLocation(),this.RandomScale(),isEvil);
         }
     }
 
     public Generate(game:Game, info:any)
     {
-        for(let i=0;i<info.numOfObjects;i++)
+/*        for(let i=0;i<info.numOfObjects;i++)
         {
             this.RandomChoose(game, false);
-        }
+        }*/
         for(let i=0;i<info.numOfMonsters;i++)
         {
             this.RandomChoose(game, true);

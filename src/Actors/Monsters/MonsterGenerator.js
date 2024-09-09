@@ -12,7 +12,6 @@ const Disk_1 = __importDefault(require("./Disk"));
 const Light_1 = __importDefault(require("./Light"));
 const Clock_1 = __importDefault(require("./Clock"));
 const Watermelon_1 = __importDefault(require("./Watermelon"));
-const Disk_2 = __importDefault(require("./Disk"));
 const MazeGenerator_1 = __importDefault(require("../Background/MazeGenerator"));
 var MonsterList;
 (function (MonsterList) {
@@ -21,9 +20,8 @@ var MonsterList;
     MonsterList[MonsterList["Clock"] = 2] = "Clock";
     MonsterList[MonsterList["Disk"] = 3] = "Disk";
     MonsterList[MonsterList["Light"] = 4] = "Light";
-    MonsterList[MonsterList["Treasure"] = 5] = "Treasure";
-    MonsterList[MonsterList["Watermelon"] = 6] = "Watermelon";
-    MonsterList[MonsterList["LENGTH"] = 7] = "LENGTH";
+    MonsterList[MonsterList["Watermelon"] = 5] = "Watermelon";
+    MonsterList[MonsterList["LENGTH"] = 6] = "LENGTH";
 })(MonsterList || (exports.MonsterList = MonsterList = {}));
 //Generate in random of different types of monsters
 class MonsterGenerator {
@@ -68,15 +66,14 @@ class MonsterGenerator {
             case 4:
                 return new Light_1.default(game, 1, this.RandomLocation(), this.RandomScale(), isEvil);
             case 5:
-                return new Disk_2.default(game, 1, this.RandomLocation(), this.RandomScale(), isEvil);
-            case 6:
                 return new Watermelon_1.default(game, 1, this.RandomLocation(), this.RandomScale(), isEvil);
         }
     }
     Generate(game, info) {
-        for (let i = 0; i < info.numOfObjects; i++) {
-            this.RandomChoose(game, false);
-        }
+        /*        for(let i=0;i<info.numOfObjects;i++)
+                {
+                    this.RandomChoose(game, false);
+                }*/
         for (let i = 0; i < info.numOfMonsters; i++) {
             this.RandomChoose(game, true);
         }

@@ -53,6 +53,8 @@ class Player extends Sprite_1.default {
         this.mStateMachine = new StateMachine_1.default(this);
         this.mStateMachine.SetGlobalState(PlayerStates_1.default.Instance);
         this.mStateMachine.SetCurrentState(PlayerStates_1.PSNormal.Instance);
+        //Additional Enter to trigger the sound initially
+        PlayerStates_1.PSNormal.Instance.Enter(this);
         this.SetType(Actor_1.Type.Player);
         //Hard code default image;
         this.mSelectImage = '😃';

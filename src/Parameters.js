@@ -26,9 +26,10 @@ exports.paras = {
     "MinOpacity": -0.4,
     "MaxOpacity": 1.1,
     "OpacitySpeed": 0.005,
-    "PlayerNormalSpeed": 200,
-    "PlayerEscapeSpeed": 300,
-    "PlayerTiredSpeed": 100,
-    "PlayerReliefSpeed": 150,
+    "PlayerNormalSpeed": 350,
+    "PlayerEscapeSpeed": 450,
+    "PlayerTiredSpeed": 250,
+    "PlayerReliefSpeed": 300,
+    "MonsterLifeSpan": 60000,
 };
 //# sourceMappingURL=Parameters.js.map

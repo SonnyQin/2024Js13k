@@ -4,6 +4,18 @@ import Telegram from "../../Message/Telegram";
 import {MessageType} from "../../Message/MessageType";
 import {paras} from "../../../Parameters";
 import MessageDispatcher from "../../Message/MessageDispatcher";
+import {CPlayer} from "../../../Sound/SoundBox";
+import {S_Normal} from "../../../Sound/Songs/S_Normal";
+import SoundPlayer from "../../../Sound/SoundPlayer";
+import {S_Win} from "../../../Sound/Songs/S_Win";
+import {S_Escape} from "../../../Sound/Songs/S_Escape";
+/*import SoundPlayer from "../../../Sound/SoundPlayer";*/
+
+function CChangeState(owner:Player, newState:any)
+{
+    if(!owner.GetFSM().isInState(newState))
+    owner.GetFSM().ChangeState(newState);
+}
 
 function Check(owner:Player)
 {
@@ -27,7 +39,8 @@ export default class PlayerGlobalState extends State<Player>
             return;
         if(owner.GetTiredness()>paras.TThre)
         {
-            owner.GetFSM().ChangeState(PSTired.Instance);
+            if(!owner.GetFSM().isInState(PSTired.Instance))
+                CChangeState(owner,PSTired.Instance);
         }
     }
 
@@ -41,28 +54,28 @@ export default class PlayerGlobalState extends State<Player>
         {
             case MessageType.PM_NORMAL:
                 if(!Check(owner))
-                owner.GetFSM().ChangeState(PSNormal.Instance);
+                    CChangeState(owner,PSNormal.Instance);
                 return true;
             case MessageType.PM_ALERT:
                 owner.AddPursuit(msg.mSender);
                 //If already in EScape state, Ignore Alert
                 if(!owner.GetFSM().isInState(PSEscape.Instance))
                     if(!Check(owner))
-                    owner.GetFSM().ChangeState(PSAlert.Instance);
+                        CChangeState(owner,PSAlert.Instance);
                 return true;
             case MessageType.PM_ESCAPE:
                 owner.AddPursuit(msg.mSender);
                 if(!Check(owner))
-                owner.GetFSM().ChangeState(PSEscape.Instance);
+                    CChangeState(owner,PSEscape.Instance);
                 return true;
             case MessageType.PM_WIN:
                 if(!Check(owner))
-                owner.GetFSM().ChangeState(PSWIN.Instance);
+                CChangeState(owner,PSWIN.Instance);
                 MessageDispatcher.Instance.DispatchMsg(3000,owner,owner,MessageType.GAMELOSE);
                 return true;
             case MessageType.PM_LOSE:
                 if(!Check(owner))
-                owner.GetFSM().ChangeState(PSLOSE.Instance);
+                    CChangeState(owner,PSLOSE.Instance);
                 MessageDispatcher.Instance.DispatchMsg(3000,owner,owner,MessageType.GAMELOSE);
                 return true;
             case MessageType.GAMEWIN:
@@ -81,20 +94,21 @@ export default class PlayerGlobalState extends State<Player>
                     if(owner.GetTiredness()>paras.TThre)
                     {
                         if(!Check(owner))
-                        owner.GetFSM().ChangeState(PSTired.Instance);
+                        CChangeState(owner, PSTired.Instance);
                     }
                     else
                     if(owner.GetTiredness()<paras.TThre&&owner.GetTiredness()>paras.TRThre)
                     {
                         if(!Check(owner))
-                        owner.GetFSM().ChangeState(PSRelief.Instance);
+                            CChangeState(owner,PSRelief.Instance);
                     }
                     else
                     {
                         if(!Check(owner))
-                        owner.GetFSM().ChangeState(PSNormal.Instance);
+                        CChangeState(owner,PSNormal.Instance);
                     }
                 }
+                return true;
 
         }
         return false;
@@ -127,6 +141,12 @@ export class PSNormal extends State<Player>
         super.Enter(owner);
         owner.SetSelectImage('😃');
         owner.SetMaxSpeed(paras.PlayerNormalSpeed);
+
+        console.log("Enter");
+
+        SoundPlayer.Instance.SetSound(S_Normal);
+        SoundPlayer.Instance.Play();
+
     }
 
     Execute(owner: Player)
@@ -136,7 +156,7 @@ export class PSNormal extends State<Player>
 
     Exit(owner: Player)
     {
-
+        SoundPlayer.Instance.Stop();
     }
 
     private static _Instance:PSNormal;
@@ -190,11 +210,19 @@ export class PSEscape extends State<Player>
     Enter(owner: Player) {
         owner.SetSelectImage('😱');
         owner.SetMaxSpeed(paras.PlayerEscapeSpeed);
+
+        SoundPlayer.Instance.SetSound(S_Escape);
+        SoundPlayer.Instance.Play();
     }
 
     Execute(owner: Player)
     {
             owner.AddTiredness(paras.EscapeTiredness);
+    }
+
+    Exit(owner: Player)
+    {
+        SoundPlayer.Instance.Stop();
     }
 
     private static _Instance:PSEscape;
@@ -270,6 +298,13 @@ export class PSWIN extends State<Player>
     Enter(owner: Player) {
         owner.SetSelectImage('🥳');
         owner.SetMaxSpeed(paras.PlayerNormalSpeed);
+        SoundPlayer.Instance.SetSound(S_Win);
+        SoundPlayer.Instance.Play();
+    }
+
+    Exit(owner: Player)
+    {
+        SoundPlayer.Instance.Stop();
     }
 
     private static _Instance:PSWIN;

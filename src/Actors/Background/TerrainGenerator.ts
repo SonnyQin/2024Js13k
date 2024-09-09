@@ -59,7 +59,7 @@ export default class TerrainGenerator
         if(info.isFogged)
             new Fog(game);
 
-        //MonsterGenerator.Instance.Generate(game, info);
+        MonsterGenerator.Instance.Generate(game, info);
 
     }
 

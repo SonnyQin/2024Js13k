@@ -16,6 +16,7 @@ class MonsterGlobalState extends State_1.default {
     OnMessage(owner, msg) {
         switch (msg.mMsg) {
             case MessageType_1.MessageType.MM_PERSUIT:
+                owner.SetActive(true);
                 if (!owner.GetFSM().isInState(MSPursuiting.Instance)) {
                     owner.GetFSM().ChangeState(MSPursuiting.Instance);
                 }

@@ -57,7 +57,7 @@ export class Game
 
         InputManager.Instance;
 
-        new Clock(this,1,new Vector2(600,600),1.0,true);
+        //new Clock(this,1,new Vector2(600,600),1.0,true);
 
     }
 

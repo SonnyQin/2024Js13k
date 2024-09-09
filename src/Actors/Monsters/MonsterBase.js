@@ -41,21 +41,32 @@ const Parameters_1 = require("../../Parameters");
 class MonsterBase extends Sprite_1.default {
     constructor(game, drawOrder = 1, pos, scale, isEvil) {
         super(game, drawOrder, pos);
-        this.mIsEvil = true;
+        this.mIsEvil = isEvil;
         this.mSteeringBehaviors = new SteeringBehaviors_1.default(this);
         //先这么写
         this.mOffset = new Math_1.Vector2();
-        this.mStateMachine = new StateMachine_1.default(this);
-        this.mStateMachine.SetGlobalState(MonsterStates_1.default.Instance);
-        this.mStateMachine.SetCurrentState(MonsterStates_1.MSHiding.Instance);
+        if (this.mIsEvil) {
+            this.mStateMachine = new StateMachine_1.default(this);
+            this.mStateMachine.SetGlobalState(MonsterStates_1.default.Instance);
+            this.mStateMachine.SetCurrentState(MonsterStates_1.MSHiding.Instance);
+        }
         this.mIsHide = true;
         this.SetType(Actor_1.Type.Monster);
         this.mc = new MovementComponent_1.default(this, 100, 150);
         this.cc = new CollisionComponent_1.default(this, 100, Parameters_1.paras.MonsterCollisionSize);
+        this.mBornTime = Date.now();
+        this.mActive = false;
+    }
+    CheckLifeSpan() {
+        if (Date.now() - this.mBornTime > Parameters_1.paras.MonsterLifeSpan) {
+            this.GetGame().RemoveActor(this);
+        }
     }
     Update(deltaTime) {
         super.Update(deltaTime);
-        this.mStateMachine.Update();
+        this.CheckLifeSpan();
+        if (this.mIsEvil)
+            this.mStateMachine.Update();
         let SteeringForce = this.mSteeringBehaviors.Calculate().Copy();
         let Acceleration = (0, Math_1.VdN)(SteeringForce, Parameters_1.paras.MonsterMass);
         let Velocity = this.mc.GetForwardSpeed().Copy();
@@ -69,7 +80,7 @@ class MonsterBase extends Sprite_1.default {
             this.DrawThirteen(context, this.mOffset);
         }
         let pos = this.GetGame().GetCamera().TransformToView(this.GetPosition());
-        context.arc(pos.x, pos.y, Parameters_1.paras.MonsterSize, 0, 2 * Math.PI);
+        context.arc(pos.x, pos.y, Parameters_1.paras.MonsterCollisionSize, 0, 2 * Math.PI);
         context.stroke();
     }
     //TODO May add some gradually appear and gradually disappear effect
@@ -97,6 +108,15 @@ class MonsterBase extends Sprite_1.default {
     }
     GetSteering() {
         return this.mSteeringBehaviors;
+    }
+    GetIsEvil() {
+        return this.mIsEvil;
+    }
+    GetActive() {
+        return this.mActive;
+    }
+    SetActive(active) {
+        this.mActive = active;
     }
 }
 exports.default = MonsterBase;

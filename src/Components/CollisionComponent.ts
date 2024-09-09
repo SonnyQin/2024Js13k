@@ -3,6 +3,7 @@ import {Actor, Type} from "../Actors/Actor";
 import {CircleCollider} from "../Math";
 import MessageDispatcher from "../AI/Message/MessageDispatcher";
 import {MessageType} from "../AI/Message/MessageType";
+import MonsterBase from "../Actors/Monsters/MonsterBase";
 
 //May not compatible for monsters
 //If collided, will send message to state, which will deal it
@@ -11,7 +12,7 @@ export default class CollisionComponent extends Component
     constructor(actor:Actor, updateOrder:number=100, length:number)
     {
         super(actor, updateOrder);
-        this.mCircleCollider=new CircleCollider(this.GetOwner().GetPosition().Copy(), length);
+        this.mCircleCollider=new CircleCollider(this.GetOwner().GetPosition(), length);
     }
 
     Update(deltaTime: number)
@@ -23,18 +24,20 @@ export default class CollisionComponent extends Component
         //Check for Actors
         for(let actor of this.GetOwner().GetGame().GetActors())
         {
-            // @ts-ignore
-            if(actor.GetCollider().IntersectCircleCollider(this.GetCollider()))
-            {
+
                 if(actor.GetType()==Type.Monster)
                 {
-                    if(actor!=this.GetOwner()&&actor)
+                    // @ts-ignore
+                    if(actor.GetCollider().IntersectCircleCollider(this.GetCollider()))
+                    {
+                    if(actor!=this.GetOwner()&&actor&&(actor as MonsterBase).GetIsEvil())
                     {
                         MessageDispatcher.Instance.DispatchMsg(0,actor, this.GetOwner(), MessageType.PM_LOSE);
                         return;
                     }
+                    }
                 }
-            }
+
         }
 
         //Check for terrain

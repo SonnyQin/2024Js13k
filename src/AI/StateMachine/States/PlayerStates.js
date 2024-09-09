@@ -8,6 +8,15 @@ const State_1 = __importDefault(require("./State"));
 const MessageType_1 = require("../../Message/MessageType");
 const Parameters_1 = require("../../../Parameters");
 const MessageDispatcher_1 = __importDefault(require("../../Message/MessageDispatcher"));
+const S_Normal_1 = require("../../../Sound/Songs/S_Normal");
+const SoundPlayer_1 = __importDefault(require("../../../Sound/SoundPlayer"));
+const S_Win_1 = require("../../../Sound/Songs/S_Win");
+const S_Escape_1 = require("../../../Sound/Songs/S_Escape");
+/*import SoundPlayer from "../../../Sound/SoundPlayer";*/
+function CChangeState(owner, newState) {
+    if (!owner.GetFSM().isInState(newState))
+        owner.GetFSM().ChangeState(newState);
+}
 function Check(owner) {
     return owner.GetFSM().isInState(PSWIN.Instance) || owner.GetFSM().isInState(PSLOSE.Instance);
 }
@@ -21,7 +30,8 @@ class PlayerGlobalState extends State_1.default {
         if (Check(owner))
             return;
         if (owner.GetTiredness() > Parameters_1.paras.TThre) {
-            owner.GetFSM().ChangeState(PSTired.Instance);
+            if (!owner.GetFSM().isInState(PSTired.Instance))
+                CChangeState(owner, PSTired.Instance);
         }
     }
     Exit(owner) {
@@ -31,28 +41,28 @@ class PlayerGlobalState extends State_1.default {
         switch (msg.mMsg) {
             case MessageType_1.MessageType.PM_NORMAL:
                 if (!Check(owner))
-                    owner.GetFSM().ChangeState(PSNormal.Instance);
+                    CChangeState(owner, PSNormal.Instance);
                 return true;
             case MessageType_1.MessageType.PM_ALERT:
                 owner.AddPursuit(msg.mSender);
                 //If already in EScape state, Ignore Alert
                 if (!owner.GetFSM().isInState(PSEscape.Instance))
                     if (!Check(owner))
-                        owner.GetFSM().ChangeState(PSAlert.Instance);
+                        CChangeState(owner, PSAlert.Instance);
                 return true;
             case MessageType_1.MessageType.PM_ESCAPE:
                 owner.AddPursuit(msg.mSender);
                 if (!Check(owner))
-                    owner.GetFSM().ChangeState(PSEscape.Instance);
+                    CChangeState(owner, PSEscape.Instance);
                 return true;
             case MessageType_1.MessageType.PM_WIN:
                 if (!Check(owner))
-                    owner.GetFSM().ChangeState(PSWIN.Instance);
+                    CChangeState(owner, PSWIN.Instance);
                 MessageDispatcher_1.default.Instance.DispatchMsg(3000, owner, owner, MessageType_1.MessageType.GAMELOSE);
                 return true;
             case MessageType_1.MessageType.PM_LOSE:
                 if (!Check(owner))
-                    owner.GetFSM().ChangeState(PSLOSE.Instance);
+                    CChangeState(owner, PSLOSE.Instance);
                 MessageDispatcher_1.default.Instance.DispatchMsg(3000, owner, owner, MessageType_1.MessageType.GAMELOSE);
                 return true;
             case MessageType_1.MessageType.GAMEWIN:
@@ -69,17 +79,18 @@ class PlayerGlobalState extends State_1.default {
                 if (!owner.IsPursuited()) {
                     if (owner.GetTiredness() > Parameters_1.paras.TThre) {
                         if (!Check(owner))
-                            owner.GetFSM().ChangeState(PSTired.Instance);
+                            CChangeState(owner, PSTired.Instance);
                     }
                     else if (owner.GetTiredness() < Parameters_1.paras.TThre && owner.GetTiredness() > Parameters_1.paras.TRThre) {
                         if (!Check(owner))
-                            owner.GetFSM().ChangeState(PSRelief.Instance);
+                            CChangeState(owner, PSRelief.Instance);
                     }
                     else {
                         if (!Check(owner))
-                            owner.GetFSM().ChangeState(PSNormal.Instance);
+                            CChangeState(owner, PSNormal.Instance);
                     }
                 }
+                return true;
         }
         return false;
     }
@@ -103,11 +114,15 @@ class PSNormal extends State_1.default {
         super.Enter(owner);
         owner.SetSelectImage('😃');
         owner.SetMaxSpeed(Parameters_1.paras.PlayerNormalSpeed);
+        console.log("Enter");
+        SoundPlayer_1.default.Instance.SetSound(S_Normal_1.S_Normal);
+        SoundPlayer_1.default.Instance.Play();
     }
     Execute(owner) {
         owner.AddTiredness(Parameters_1.paras.RecoverTiredness);
     }
     Exit(owner) {
+        SoundPlayer_1.default.Instance.Stop();
     }
 }
 exports.PSNormal = PSNormal;
@@ -143,9 +158,14 @@ class PSEscape extends State_1.default {
     Enter(owner) {
         owner.SetSelectImage('😱');
         owner.SetMaxSpeed(Parameters_1.paras.PlayerEscapeSpeed);
+        SoundPlayer_1.default.Instance.SetSound(S_Escape_1.S_Escape);
+        SoundPlayer_1.default.Instance.Play();
     }
     Execute(owner) {
         owner.AddTiredness(Parameters_1.paras.EscapeTiredness);
+    }
+    Exit(owner) {
+        SoundPlayer_1.default.Instance.Stop();
     }
 }
 exports.PSEscape = PSEscape;
@@ -200,6 +220,11 @@ class PSWIN extends State_1.default {
     Enter(owner) {
         owner.SetSelectImage('🥳');
         owner.SetMaxSpeed(Parameters_1.paras.PlayerNormalSpeed);
+        SoundPlayer_1.default.Instance.SetSound(S_Win_1.S_Win);
+        SoundPlayer_1.default.Instance.Play();
+    }
+    Exit(owner) {
+        SoundPlayer_1.default.Instance.Stop();
     }
 }
 exports.PSWIN = PSWIN;

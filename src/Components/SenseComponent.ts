@@ -3,6 +3,7 @@ import {Actor, Type} from "../Actors/Actor";
 import MessageDispatcher from "../AI/Message/MessageDispatcher";
 import {MessageType} from "../AI/Message/MessageType";
 import Player from "../Actors/Player";
+import MonsterBase from "../Actors/Monsters/MonsterBase";
 
 export default class SenseComponent extends Component
 {
@@ -10,7 +11,7 @@ export default class SenseComponent extends Component
     {
         super(actor, updateOrder);
         this.mAlertDis=500;
-        this.mDangerDis=200;
+        this.mDangerDis=300;
     }
 
     Update(deltaTime: number)
@@ -18,7 +19,7 @@ export default class SenseComponent extends Component
         super.Update(deltaTime);
         for(let actor of this.GetOwner().GetGame().GetActors())
         {
-            if(actor.GetType()==Type.Monster)
+            if(actor.GetType()==Type.Monster&&(actor as MonsterBase).GetIsEvil())
             {
                 let dis=actor.GetPosition().DisTo(this.GetOwner().GetPosition());
                 if(dis<this.mDangerDis)

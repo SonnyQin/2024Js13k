@@ -11,12 +11,12 @@ class SenseComponent extends Component_1.Component {
     constructor(actor, updateOrder = 100) {
         super(actor, updateOrder);
         this.mAlertDis = 500;
-        this.mDangerDis = 200;
+        this.mDangerDis = 300;
     }
     Update(deltaTime) {
         super.Update(deltaTime);
         for (let actor of this.GetOwner().GetGame().GetActors()) {
-            if (actor.GetType() == Actor_1.Type.Monster) {
+            if (actor.GetType() == Actor_1.Type.Monster && actor.GetIsEvil()) {
                 let dis = actor.GetPosition().DisTo(this.GetOwner().GetPosition());
                 if (dis < this.mDangerDis) {
                     //Change State to escape

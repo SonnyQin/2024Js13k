@@ -20,6 +20,7 @@ export default class MessageDispatcher
     {
         if(!receiver.HandleMessage(telegram))
         {
+            console.log(telegram.mMsg);
             console.log("Message unhandled");
         }
     }
