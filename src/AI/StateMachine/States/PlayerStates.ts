@@ -10,6 +10,7 @@ import SoundPlayer from "../../../Sound/SoundPlayer";
 import {S_Win} from "../../../Sound/Songs/S_Win";
 import {S_Escape} from "../../../Sound/Songs/S_Escape";
 import {S_Lose} from "../../../Sound/Songs/S_Lose";
+import {S_Relief} from "../../../Sound/Songs/S_Relief";
 /*import SoundPlayer from "../../../Sound/SoundPlayer";*/
 
 function CChangeState(owner:Player, newState:any)
@@ -277,11 +278,18 @@ export class PSRelief extends State<Player>
     Enter(owner: Player) {
         owner.SetSelectImage('🥶');
         owner.SetMaxSpeed(paras.PlayerReliefSpeed);
+        SoundPlayer.Instance.SetSound(S_Relief);
         SoundPlayer.Instance.SetRepeat(true);
+        SoundPlayer.Instance.Play();
     }
     Execute(owner: Player)
     {
         owner.AddTiredness(paras.RecoverTiredness);
+    }
+
+    Exit(owner: Player)
+    {
+        SoundPlayer.Instance.Stop();
     }
 
     private static _Instance:PSRelief;

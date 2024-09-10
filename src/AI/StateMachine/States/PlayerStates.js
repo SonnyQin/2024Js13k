@@ -13,6 +13,7 @@ const SoundPlayer_1 = __importDefault(require("../../../Sound/SoundPlayer"));
 const S_Win_1 = require("../../../Sound/Songs/S_Win");
 const S_Escape_1 = require("../../../Sound/Songs/S_Escape");
 const S_Lose_1 = require("../../../Sound/Songs/S_Lose");
+const S_Relief_1 = require("../../../Sound/Songs/S_Relief");
 /*import SoundPlayer from "../../../Sound/SoundPlayer";*/
 function CChangeState(owner, newState) {
     if (!owner.GetFSM().isInState(newState))
@@ -207,10 +208,15 @@ class PSRelief extends State_1.default {
     Enter(owner) {
         owner.SetSelectImage('🥶');
         owner.SetMaxSpeed(Parameters_1.paras.PlayerReliefSpeed);
+        SoundPlayer_1.default.Instance.SetSound(S_Relief_1.S_Relief);
         SoundPlayer_1.default.Instance.SetRepeat(true);
+        SoundPlayer_1.default.Instance.Play();
     }
     Execute(owner) {
         owner.AddTiredness(Parameters_1.paras.RecoverTiredness);
+    }
+    Exit(owner) {
+        SoundPlayer_1.default.Instance.Stop();
     }
 }
 exports.PSRelief = PSRelief;
