@@ -40,7 +40,6 @@ class Button extends Element_1.default {
         super.Update();
         const mousePosition = InputManager_1.default.Instance.GetMouseVec();
         const isMouseOver = this.mZone.Inside(mousePosition);
-        console.log(isMouseOver);
         if (InputManager_1.default.Instance.leftbutton) {
             if (isMouseOver) {
                 this.OnClick();

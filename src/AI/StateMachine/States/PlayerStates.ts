@@ -143,8 +143,6 @@ export class PSNormal extends State<Player>
         owner.SetSelectImage('😃');
         owner.SetMaxSpeed(paras.PlayerNormalSpeed);
 
-        console.log("Enter");
-
         SoundPlayer.Instance.SetSound(S_Normal);
         SoundPlayer.Instance.SetRepeat(true);
         SoundPlayer.Instance.Play();

@@ -1,6 +1,7 @@
 import {Game} from "./Game";
 import TerrainGenerator from "./Actors/Background/TerrainGenerator";
 import UIScreen from "./UI/UIScreens/UIScreen";
+import InputManager from "./InputManager";
 
 export enum LevelStatus
 {
@@ -44,8 +45,7 @@ export default class LevelController
             console.log("Unable to create Context");
             return;
         }
-
-
+        InputManager.Instance;
     }
 
     public Update()
@@ -57,7 +57,6 @@ export default class LevelController
             {
                 alert("YOU WIN ALL");
             }
-            this.mGameResult=GameResult.UNDETERMINE;
             this.BeginLevel();
         }
         else
@@ -88,9 +87,12 @@ export default class LevelController
     //Each time call BeginLevel, generate a new game according to the difficulties
     public BeginLevel()
     {
-        TerrainGenerator.Instance.SetDifficulty(this.mLevelNumber);
         this.mGame=new Game();
         this.mGame.Initialize();
+        TerrainGenerator.Instance.SetDifficulty(this.mLevelNumber);
+        TerrainGenerator.Instance.Generate(this.mGame);
+        this.mGameResult=GameResult.UNDETERMINE;
+        this.mStatus=LevelStatus.GameState;
     }
 
     //Which also indicate the difficulty

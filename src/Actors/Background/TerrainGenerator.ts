@@ -27,7 +27,7 @@ export let DifficultyInfo=
             numOfObjects:20,
             numOfMonsters:15,
             mapSize: 20,
-            isFogged: false,
+            isFogged: true,
         },
         2:{
             numOfObjects:40,
@@ -58,7 +58,8 @@ export default class TerrainGenerator
 
         if(info.isFogged)
         {
-            new Fog(game);
+            let fog=new Fog(game);
+            game.SetFog(fog);
             game.SetIsFogged(true);
         }
 

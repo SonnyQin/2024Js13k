@@ -65,6 +65,11 @@ export default class MessageDispatcher
         this.mQueue.splice(i, 0, telegram);
     }
 
+    public Clear()
+    {
+        this.mQueue=[];
+    }
+
     private mQueue:Telegram[];
     private static _Instance:MessageDispatcher;
 }

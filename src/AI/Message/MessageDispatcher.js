@@ -49,6 +49,9 @@ class MessageDispatcher {
         }
         this.mQueue.splice(i, 0, telegram);
     }
+    Clear() {
+        this.mQueue = [];
+    }
 }
 exports.default = MessageDispatcher;
 //# sourceMappingURL=MessageDispatcher.js.map

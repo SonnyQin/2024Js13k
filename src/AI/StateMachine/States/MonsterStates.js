@@ -48,6 +48,7 @@ class MSPursuiting extends State_1.default {
     }
     Enter(owner) {
         owner.GetSteering().PursuitOn();
+        owner.SetBornTime(Date.now());
     }
     Execute(owner) {
     }

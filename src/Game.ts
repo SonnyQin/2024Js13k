@@ -7,6 +7,7 @@ import TerrainGenerator from "./Actors/Background/TerrainGenerator";
 import Fog from "./Camera/Fog";
 import LevelController, {GameResult} from "./LevelController";
 import SoundPlayer from "./Sound/SoundPlayer";
+import {paras} from "./Parameters";
 
 export class Game
 {
@@ -34,12 +35,6 @@ export class Game
         this.mCanvasHeight=LevelController.Instance.mCanvasHeight;
         // @ts-ignore
         this.mContext=LevelController.Instance.mContext;
-
-        TerrainGenerator.Instance.Generate(this);
-
-        InputManager.Instance;
-
-        //new Clock(this,1,new Vector2(600,600),1.0,true);
 
     }
 
@@ -94,8 +89,12 @@ export class Game
     //Draw the level number on top right corner
     public DrawLevel(ctx:CanvasRenderingContext2D)
     {
-        let text="LEVEL "+LevelController.Instance.GetLevelNumber();
-        ctx.fillStyle
+        let text="LEVEL "+(LevelController.Instance.GetLevelNumber()+1);
+        ctx.font = '30px Almendra'; // 选择合适的字体和大小
+        ctx.fillStyle = '#FFFF00'; // 文字颜色
+        ctx.textAlign = 'right'; // 文字右对齐
+        ctx.textBaseline = 'top'; // 文字基线对齐
+        ctx.fillText(text, this.mCanvasWidth-paras.UIx, paras.UIy);
     }
     //Variables
     // @ts-ignore
@@ -176,6 +175,7 @@ export class Game
         LevelController.Instance.SetStatus(1);
         LevelController.Instance.SetGameResult(GameResult.WIN);
         SoundPlayer.Instance.Stop();
+        MessageDispatcher.Instance.Clear();
     }
 
     public LOSE()
@@ -183,6 +183,7 @@ export class Game
         LevelController.Instance.SetStatus(-1);
         LevelController.Instance.SetGameResult(GameResult.LOSE);
         SoundPlayer.Instance.Stop();
+        MessageDispatcher.Instance.Clear();
     }
 
     public SetPlayer(player:Player)
@@ -193,5 +194,10 @@ export class Game
     public SetIsFogged(fog:boolean)
     {
         this.mIsFogged=fog;
+    }
+
+    public SetFog(fog:Fog)
+    {
+        this.mFog=fog;
     }
 }

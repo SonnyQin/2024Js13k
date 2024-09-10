@@ -8,7 +8,7 @@ import {VdN, Vector2, Zone} from "../../Math";
 import StateMachine from "../../AI/StateMachine/StateMachine";
 import Telegram from "../../AI/Message/Telegram";
 import {Type} from "../Actor";
-import MonsterGlobalState, {MSHiding} from "../../AI/StateMachine/States/MonsterStates";
+import MonsterGlobalState, {MSHiding, MSPursuiting} from "../../AI/StateMachine/States/MonsterStates";
 import MovementComponent from "../../Components/MovementComponent";
 import CollisionComponent from "../../Components/CollisionComponent";
 import {paras} from "../../Parameters";
@@ -34,14 +34,14 @@ export default class MonsterBase extends Sprite
 
         this.mc=new MovementComponent(this,100,150);
         this.cc=new CollisionComponent(this, 100, paras.MonsterCollisionSize);
-        this.mBornTime=Date.now();
         this.mActive=false;
     }
 
     private CheckLifeSpan()
     {
-        if(Date.now()-this.mBornTime>paras.MonsterLifeSpan)
+        if(this.mStateMachine.isInState(MSPursuiting.Instance)&&Date.now()-this.mBornTime>paras.MonsterLifeSpan)
         {
+            console.log("Dead");
             this.GetGame().RemoveActor(this);
         }
     }
@@ -50,10 +50,11 @@ export default class MonsterBase extends Sprite
     {
         super.Update(deltaTime);
 
-        this.CheckLifeSpan();
-
         if(this.mIsEvil)
+        {
+            this.CheckLifeSpan();
             this.mStateMachine.Update();
+        }
         let SteeringForce=this.mSteeringBehaviors.Calculate().Copy();
 
         let Acceleration= VdN(SteeringForce,paras.MonsterMass);
@@ -105,7 +106,8 @@ export default class MonsterBase extends Sprite
     private mc:MovementComponent;
     private cc:CollisionComponent;
 
-    private mBornTime;
+    // @ts-ignore
+    private mBornTime:number;
     private mActive:boolean;
 
     public GetFSM():StateMachine<MonsterBase>
@@ -146,5 +148,10 @@ export default class MonsterBase extends Sprite
     public SetActive(active:boolean)
     {
         this.mActive=active;
+    }
+
+    public SetBornTime(borntime:number)
+    {
+        this.mBornTime=borntime;
     }
 }

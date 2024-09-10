@@ -67,6 +67,7 @@ export class MSPursuiting extends State<MonsterBase>
     Enter(owner: MonsterBase)
     {
         owner.GetSteering().PursuitOn();
+        owner.SetBornTime(Date.now());
     }
 
     Execute(owner: MonsterBase)

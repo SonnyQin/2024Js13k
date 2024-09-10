@@ -30,9 +30,9 @@ exports.Game = void 0;
 const InputManager_1 = __importDefault(require("./InputManager"));
 const MessageDispatcher_1 = __importDefault(require("./AI/Message/MessageDispatcher"));
 const Camera_1 = __importDefault(require("./Camera/Camera"));
-const TerrainGenerator_1 = __importDefault(require("./Actors/Background/TerrainGenerator"));
 const LevelController_1 = __importStar(require("./LevelController"));
 const SoundPlayer_1 = __importDefault(require("./Sound/SoundPlayer"));
+const Parameters_1 = require("./Parameters");
 class Game {
     constructor() {
         this.mIsRunning = true;
@@ -51,9 +51,6 @@ class Game {
         this.mCanvasHeight = LevelController_1.default.Instance.mCanvasHeight;
         // @ts-ignore
         this.mContext = LevelController_1.default.Instance.mContext;
-        TerrainGenerator_1.default.Instance.Generate(this);
-        InputManager_1.default.Instance;
-        //new Clock(this,1,new Vector2(600,600),1.0,true);
     }
     RunLoop() {
         this.ProcessInput();
@@ -93,8 +90,12 @@ class Game {
     }
     //Draw the level number on top right corner
     DrawLevel(ctx) {
-        let text = "LEVEL " + LevelController_1.default.Instance.GetLevelNumber();
-        ctx.fillStyle;
+        let text = "LEVEL " + (LevelController_1.default.Instance.GetLevelNumber() + 1);
+        ctx.font = '30px Almendra'; // 选择合适的字体和大小
+        ctx.fillStyle = '#FFFF00'; // 文字颜色
+        ctx.textAlign = 'right'; // 文字右对齐
+        ctx.textBaseline = 'top'; // 文字基线对齐
+        ctx.fillText(text, this.mCanvasWidth - Parameters_1.paras.UIx, Parameters_1.paras.UIy);
     }
     //Functions about actors
     //TODO Optimization
@@ -135,17 +136,22 @@ class Game {
         LevelController_1.default.Instance.SetStatus(1);
         LevelController_1.default.Instance.SetGameResult(LevelController_1.GameResult.WIN);
         SoundPlayer_1.default.Instance.Stop();
+        MessageDispatcher_1.default.Instance.Clear();
     }
     LOSE() {
         LevelController_1.default.Instance.SetStatus(-1);
         LevelController_1.default.Instance.SetGameResult(LevelController_1.GameResult.LOSE);
         SoundPlayer_1.default.Instance.Stop();
+        MessageDispatcher_1.default.Instance.Clear();
     }
     SetPlayer(player) {
         this.mPlayer = player;
     }
     SetIsFogged(fog) {
         this.mIsFogged = fog;
+    }
+    SetFog(fog) {
+        this.mFog = fog;
     }
 }
 exports.Game = Game;

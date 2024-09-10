@@ -27,7 +27,7 @@ exports.DifficultyInfo = {
         numOfObjects: 20,
         numOfMonsters: 15,
         mapSize: 20,
-        isFogged: false,
+        isFogged: true,
     },
     2: {
         numOfObjects: 40,
@@ -48,7 +48,8 @@ class TerrainGenerator {
         game.SetPlayer(new Player_1.default(game));
         new Background_1.Background(game, MazeGenerator_1.default.Instance.GetMapArr());
         if (info.isFogged) {
-            new Fog_1.default(game);
+            let fog = new Fog_1.default(game);
+            game.SetFog(fog);
             game.SetIsFogged(true);
         }
         MonsterGenerator_1.default.Instance.Generate(game, info);

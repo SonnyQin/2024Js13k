@@ -54,19 +54,20 @@ class MonsterBase extends Sprite_1.default {
         this.SetType(Actor_1.Type.Monster);
         this.mc = new MovementComponent_1.default(this, 100, 150);
         this.cc = new CollisionComponent_1.default(this, 100, Parameters_1.paras.MonsterCollisionSize);
-        this.mBornTime = Date.now();
         this.mActive = false;
     }
     CheckLifeSpan() {
-        if (Date.now() - this.mBornTime > Parameters_1.paras.MonsterLifeSpan) {
+        if (this.mStateMachine.isInState(MonsterStates_1.MSPursuiting.Instance) && Date.now() - this.mBornTime > Parameters_1.paras.MonsterLifeSpan) {
+            console.log("Dead");
             this.GetGame().RemoveActor(this);
         }
     }
     Update(deltaTime) {
         super.Update(deltaTime);
-        this.CheckLifeSpan();
-        if (this.mIsEvil)
+        if (this.mIsEvil) {
+            this.CheckLifeSpan();
             this.mStateMachine.Update();
+        }
         let SteeringForce = this.mSteeringBehaviors.Calculate().Copy();
         let Acceleration = (0, Math_1.VdN)(SteeringForce, Parameters_1.paras.MonsterMass);
         let Velocity = this.mc.GetForwardSpeed().Copy();
@@ -117,6 +118,9 @@ class MonsterBase extends Sprite_1.default {
     }
     SetActive(active) {
         this.mActive = active;
+    }
+    SetBornTime(borntime) {
+        this.mBornTime = borntime;
     }
 }
 exports.default = MonsterBase;
