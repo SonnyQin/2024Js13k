@@ -9,6 +9,7 @@ import {S_Normal} from "../../../Sound/Songs/S_Normal";
 import SoundPlayer from "../../../Sound/SoundPlayer";
 import {S_Win} from "../../../Sound/Songs/S_Win";
 import {S_Escape} from "../../../Sound/Songs/S_Escape";
+import {S_Lose} from "../../../Sound/Songs/S_Lose";
 /*import SoundPlayer from "../../../Sound/SoundPlayer";*/
 
 function CChangeState(owner:Player, newState:any)
@@ -72,12 +73,12 @@ export default class PlayerGlobalState extends State<Player>
                 if(!Check(owner))
                 CChangeState(owner,PSWIN.Instance);
                 //TODO Set the song to play once and clear all other sound
-                MessageDispatcher.Instance.DispatchMsg(3000,owner,owner,MessageType.GAMEWIN);
+                MessageDispatcher.Instance.DispatchMsg(4000,owner,owner,MessageType.GAMEWIN);
                 return true;
             case MessageType.PM_LOSE:
                 if(!Check(owner))
                     CChangeState(owner,PSLOSE.Instance);
-                MessageDispatcher.Instance.DispatchMsg(3000,owner,owner,MessageType.GAMELOSE);
+                MessageDispatcher.Instance.DispatchMsg(4000,owner,owner,MessageType.GAMELOSE);
                 return true;
             case MessageType.GAMEWIN:
                 owner.GetGame().Stop();
@@ -242,8 +243,8 @@ export class PSTired extends State<Player>
         return this._Instance;
     }
 
-    Enter(owner: Player) {
-        console.log("ddqwdq");
+    Enter(owner: Player)
+    {
         owner.SetSelectImage('🥵');
         owner.SetMaxSpeed(paras.PlayerTiredSpeed);
         SoundPlayer.Instance.SetRepeat(true);
@@ -331,7 +332,14 @@ export class PSLOSE extends State<Player>
     Enter(owner: Player) {
         owner.SetSelectImage('😭');
         owner.SetMaxSpeed(paras.PlayerNormalSpeed);
+        SoundPlayer.Instance.SetSound(S_Lose);
         SoundPlayer.Instance.SetRepeat(false);
+        SoundPlayer.Instance.Play();
+    }
+
+    Exit(owner: Player)
+    {
+        SoundPlayer.Instance.Stop();
     }
 
     private static _Instance:PSLOSE;

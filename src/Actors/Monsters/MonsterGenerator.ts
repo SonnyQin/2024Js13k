@@ -86,10 +86,10 @@ export default class MonsterGenerator
 
     public Generate(game:Game, info:any)
     {
-/*        for(let i=0;i<info.numOfObjects;i++)
+        for(let i=0;i<info.numOfObjects;i++)
         {
             this.RandomChoose(game, false);
-        }*/
+        }
         for(let i=0;i<info.numOfMonsters;i++)
         {
             this.RandomChoose(game, true);

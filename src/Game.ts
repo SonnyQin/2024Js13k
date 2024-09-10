@@ -8,6 +8,8 @@ import Fog from "./Camera/Fog";
 import LevelController, {GameResult} from "./LevelController";
 import SoundPlayer from "./Sound/SoundPlayer";
 import {paras} from "./Parameters";
+import Clock from "./Actors/Monsters/Clock";
+import { Vector2 } from "./Math";
 
 export class Game
 {
@@ -35,6 +37,8 @@ export class Game
         this.mCanvasHeight=LevelController.Instance.mCanvasHeight;
         // @ts-ignore
         this.mContext=LevelController.Instance.mContext;
+
+        //new Clock(this, 1, new Vector2(1000,1000),1.0, true);
 
     }
 
@@ -131,7 +135,7 @@ export class Game
     }
     RemoveActor(actor:Actor):void
     {
-        this.mActors.filter((iter)=>iter!=actor);
+        this.mActors=this.mActors.filter((iter)=>iter!=actor);
     }
 
     //Getters and Setters

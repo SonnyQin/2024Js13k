@@ -70,10 +70,9 @@ class MonsterGenerator {
         }
     }
     Generate(game, info) {
-        /*        for(let i=0;i<info.numOfObjects;i++)
-                {
-                    this.RandomChoose(game, false);
-                }*/
+        for (let i = 0; i < info.numOfObjects; i++) {
+            this.RandomChoose(game, false);
+        }
         for (let i = 0; i < info.numOfMonsters; i++) {
             this.RandomChoose(game, true);
         }

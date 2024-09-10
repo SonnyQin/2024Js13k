@@ -12,6 +12,7 @@ const S_Normal_1 = require("../../../Sound/Songs/S_Normal");
 const SoundPlayer_1 = __importDefault(require("../../../Sound/SoundPlayer"));
 const S_Win_1 = require("../../../Sound/Songs/S_Win");
 const S_Escape_1 = require("../../../Sound/Songs/S_Escape");
+const S_Lose_1 = require("../../../Sound/Songs/S_Lose");
 /*import SoundPlayer from "../../../Sound/SoundPlayer";*/
 function CChangeState(owner, newState) {
     if (!owner.GetFSM().isInState(newState))
@@ -59,12 +60,12 @@ class PlayerGlobalState extends State_1.default {
                 if (!Check(owner))
                     CChangeState(owner, PSWIN.Instance);
                 //TODO Set the song to play once and clear all other sound
-                MessageDispatcher_1.default.Instance.DispatchMsg(3000, owner, owner, MessageType_1.MessageType.GAMEWIN);
+                MessageDispatcher_1.default.Instance.DispatchMsg(4000, owner, owner, MessageType_1.MessageType.GAMEWIN);
                 return true;
             case MessageType_1.MessageType.PM_LOSE:
                 if (!Check(owner))
                     CChangeState(owner, PSLOSE.Instance);
-                MessageDispatcher_1.default.Instance.DispatchMsg(3000, owner, owner, MessageType_1.MessageType.GAMELOSE);
+                MessageDispatcher_1.default.Instance.DispatchMsg(4000, owner, owner, MessageType_1.MessageType.GAMELOSE);
                 return true;
             case MessageType_1.MessageType.GAMEWIN:
                 owner.GetGame().Stop();
@@ -182,7 +183,6 @@ class PSTired extends State_1.default {
         return this._Instance;
     }
     Enter(owner) {
-        console.log("ddqwdq");
         owner.SetSelectImage('🥵');
         owner.SetMaxSpeed(Parameters_1.paras.PlayerTiredSpeed);
         SoundPlayer_1.default.Instance.SetRepeat(true);
@@ -247,7 +247,12 @@ class PSLOSE extends State_1.default {
     Enter(owner) {
         owner.SetSelectImage('😭');
         owner.SetMaxSpeed(Parameters_1.paras.PlayerNormalSpeed);
+        SoundPlayer_1.default.Instance.SetSound(S_Lose_1.S_Lose);
         SoundPlayer_1.default.Instance.SetRepeat(false);
+        SoundPlayer_1.default.Instance.Play();
+    }
+    Exit(owner) {
+        SoundPlayer_1.default.Instance.Stop();
     }
 }
 exports.PSLOSE = PSLOSE;

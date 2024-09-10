@@ -51,6 +51,7 @@ class Game {
         this.mCanvasHeight = LevelController_1.default.Instance.mCanvasHeight;
         // @ts-ignore
         this.mContext = LevelController_1.default.Instance.mContext;
+        //new Clock(this, 1, new Vector2(1000,1000),1.0, true);
     }
     RunLoop() {
         this.ProcessInput();
@@ -108,7 +109,7 @@ class Game {
         this.mActors.splice(i, 0, actor);
     }
     RemoveActor(actor) {
-        this.mActors.filter((iter) => iter != actor);
+        this.mActors = this.mActors.filter((iter) => iter != actor);
     }
     //Getters and Setters
     GetContext() {
