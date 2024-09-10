@@ -25,6 +25,8 @@ class UIScreen {
     }
     Draw(ctx) {
         LevelController_1.default.Instance.mContext.beginPath();
+        let canvasw = LevelController_1.default.Instance.mCanvasWidth;
+        let canvash = LevelController_1.default.Instance.mCanvasHeight;
         LevelController_1.default.Instance.mContext.clearRect(0, 0, LevelController_1.default.Instance.mCanvasWidth, LevelController_1.default.Instance.mCanvasWidth);
         if (this.mStack.length) {
             this.mStack[this.mStack.length - 1].Draw(ctx);

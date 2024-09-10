@@ -28,6 +28,8 @@ export default class UIScreen {
 
     public Draw(ctx: CanvasRenderingContext2D): void {
         LevelController.Instance.mContext.beginPath();
+        let canvasw=LevelController.Instance.mCanvasWidth;
+        let canvash=LevelController.Instance.mCanvasHeight;
         LevelController.Instance.mContext.clearRect(0,0,LevelController.Instance.mCanvasWidth,LevelController.Instance.mCanvasWidth);
         if (this.mStack.length) {
             this.mStack[this.mStack.length - 1].Draw(ctx);
