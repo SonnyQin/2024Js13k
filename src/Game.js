@@ -1,4 +1,27 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -6,9 +29,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Game = void 0;
 const InputManager_1 = __importDefault(require("./InputManager"));
 const MessageDispatcher_1 = __importDefault(require("./AI/Message/MessageDispatcher"));
-const HUD_1 = __importDefault(require("./UI/UIScreens/HUD"));
 const Camera_1 = __importDefault(require("./Camera/Camera"));
 const TerrainGenerator_1 = __importDefault(require("./Actors/Background/TerrainGenerator"));
+const LevelController_1 = __importStar(require("./LevelController"));
+const SoundPlayer_1 = __importDefault(require("./Sound/SoundPlayer"));
 class Game {
     constructor() {
         this.mIsRunning = true;
@@ -17,27 +41,16 @@ class Game {
         // @ts-ignore
         this.mContext = null;
         //this.mInputManager=new InputManager();
-        this.mHUD = new HUD_1.default(this);
         this.mCamera = new Camera_1.default(this);
-        this.mResult = false;
+        this.mIsFogged = false;
     }
     Initialize() {
         this.mTickCount = Date.now();
-        let Canvas = document.createElement('canvas');
-        this.mCanvas = Canvas;
-        if (!Canvas) {
-            console.log("Unable to create Canvas");
-            return;
-        }
-        this.mCanvasWidth = Canvas.width = window.innerWidth;
-        this.mCanvasHeight = Canvas.height = window.innerHeight;
-        document.body.appendChild(Canvas);
+        this.mCanvas = LevelController_1.default.Instance.mCanvas;
+        this.mCanvasWidth = LevelController_1.default.Instance.mCanvasWidth;
+        this.mCanvasHeight = LevelController_1.default.Instance.mCanvasHeight;
         // @ts-ignore
-        this.mContext = Canvas.getContext('2d');
-        if (!this.mContext) {
-            console.log("Unable to create Context");
-            return;
-        }
+        this.mContext = LevelController_1.default.Instance.mContext;
         TerrainGenerator_1.default.Instance.Generate(this);
         InputManager_1.default.Instance;
         //new Clock(this,1,new Vector2(600,600),1.0,true);
@@ -67,7 +80,6 @@ class Game {
         //Regular update of Messages
         MessageDispatcher_1.default.Instance.DispatchDelayedMessages();
         this.mCamera.Update();
-        this.mHUD.Update();
     }
     GenerateOutput() {
         this.mContext.beginPath();
@@ -75,8 +87,14 @@ class Game {
         for (let iter of this.mActors) {
             iter.Draw(this.mContext);
         }
-        this.mHUD.Draw(this.mContext);
-        /*this.mFog.Update();*/
+        if (this.mIsFogged)
+            this.mFog.Update();
+        this.DrawLevel(this.mContext);
+    }
+    //Draw the level number on top right corner
+    DrawLevel(ctx) {
+        let text = "LEVEL " + LevelController_1.default.Instance.GetLevelNumber();
+        ctx.fillStyle;
     }
     //Functions about actors
     //TODO Optimization
@@ -114,13 +132,20 @@ class Game {
         return this.mCanvas;
     }
     WIN() {
-        this.mResult = true;
+        LevelController_1.default.Instance.SetStatus(1);
+        LevelController_1.default.Instance.SetGameResult(LevelController_1.GameResult.WIN);
+        SoundPlayer_1.default.Instance.Stop();
     }
     LOSE() {
-        this.mResult = false;
+        LevelController_1.default.Instance.SetStatus(-1);
+        LevelController_1.default.Instance.SetGameResult(LevelController_1.GameResult.LOSE);
+        SoundPlayer_1.default.Instance.Stop();
     }
     SetPlayer(player) {
         this.mPlayer = player;
+    }
+    SetIsFogged(fog) {
+        this.mIsFogged = fog;
     }
 }
 exports.Game = Game;

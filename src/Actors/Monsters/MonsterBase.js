@@ -75,13 +75,13 @@ class MonsterBase extends Sprite_1.default {
         this.mc.SetForwardSpeed(Velocity);
     }
     Draw(context) {
-        super.Draw(context);
+        super.Draw(context, Parameters_1.paras.MonsterOffsetx, Parameters_1.paras.MonsterOffsety);
         if (this.mIsEvil && this.mStateMachine.GetCurrentState() != MonsterStates_1.MSHiding.Instance) {
             this.DrawThirteen(context, this.mOffset);
         }
-        let pos = this.GetGame().GetCamera().TransformToView(this.GetPosition());
-        context.arc(pos.x, pos.y, Parameters_1.paras.MonsterCollisionSize, 0, 2 * Math.PI);
-        context.stroke();
+        /*let pos=this.GetGame().GetCamera().TransformToView(this.GetPosition());
+        context.arc(pos.x, pos.y, paras.MonsterCollisionSize,0,2*Math.PI);
+        context.stroke();*/
     }
     //TODO May add some gradually appear and gradually disappear effect
     DrawThirteen(ctx, offset) {
@@ -89,7 +89,7 @@ class MonsterBase extends Sprite_1.default {
         ctx.font = "20px Georgia";
         let pos = this.TransformToView();
         ctx.fillText("13", pos.x + offset.x, pos.y + offset.y);
-        ctx.stroke();
+        //ctx.stroke();
     }
     HandleMessage(telegram) {
         return this.mStateMachine.HandleMessage(telegram);

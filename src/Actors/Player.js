@@ -64,6 +64,8 @@ class Player extends Sprite_1.default {
         this.mPursuitMonsters = new Set();
     }
     ProcessInput(keyState) {
+        if (keyState.keysDown['t'])
+            this.SetPosition(MazeGenerator_1.default.Instance.GetLocation(MazeGenerator_1.default.Instance.GetEndPos()));
         if (keyState.leftbutton)
             this.mActive = true;
         if (this.mActive)
@@ -71,19 +73,20 @@ class Player extends Sprite_1.default {
     }
     Update(deltaTime) {
         super.Update(deltaTime);
-        //console.log(this.GetPosition());
+        //console.log(this.GetFSM().GetCurrentState());
         this.mStateMachine.Update();
         if (MazeGenerator_1.default.Instance.GetWinZone().Inside(this.GetPosition())) {
             MessageDispatcher_1.default.Instance.DispatchMsg(0, this, this, MessageType_1.MessageType.PM_WIN);
         }
     }
     Draw(context) {
-        let b = context.measureText(this.mSelectImage);
-        this.DrawImage(context, this.mSelectImage, Parameters_1.paras.PlayerSize);
+        /*let b=context.measureText(this.mSelectImage);*/
+        this.DrawImage(context, this.mSelectImage, Parameters_1.paras.PlayerSize, Parameters_1.paras.offsetx, Parameters_1.paras.offsety);
         let pos = this.TransformToView();
-        context.arc(pos.x, pos.y, Parameters_1.paras.PlayerCollisionSize, 0, 2 * Math.PI);
-        context.stroke();
-        context.closePath();
+        /*        context.arc(pos.x, pos.y, paras.PlayerCollisionSize,0,2*Math.PI);
+                context.stroke();
+                context.closePath();*/
+        //context.stroke()
     }
     HandleMessage(telegram) {
         return this.mStateMachine.HandleMessage(telegram);

@@ -61,9 +61,9 @@ export default class Fog
         this.mGame.GetContext().drawImage(this.mCanvas, 0, 0);
 
 // Optionally draw a line from (0, 0) to the player's position
-        this.mGame.GetContext().moveTo(0, 0);
+        /*this.mGame.GetContext().moveTo(0, 0);
         this.mGame.GetContext().lineTo(pos.x, pos.y);
-        this.mGame.GetContext().stroke();
+        this.mGame.GetContext().stroke();*/
     }
 
     private updateOpacity(): void {

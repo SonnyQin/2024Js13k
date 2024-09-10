@@ -1,26 +1,18 @@
 import {Game} from "./Game";
 import {Sleep} from "./Math";
 import InputManager from "./InputManager";
-console.log("Enter");
+import LevelController from "./LevelController";
+LevelController.Instance;
 
-let button=document.createElement('button');
-button.onclick=Begin;
-document.body.append(button);
-
-function Begin()
+var globalID;
+function animate()
 {
-    var game=new Game();
-    game.Initialize();
-    var globalID;
-    function animate()
-    {
-        if(!game.mIsRunning)
-            return;
-        game.RunLoop();
-        /*    if(!game.mIsRunning)
-                return;*/
-        globalID=requestAnimationFrame(animate);
-    }
-
+    LevelController.Instance.Update();
+    /*    if(!game.mIsRunning)
+            return;*/
     globalID=requestAnimationFrame(animate);
 }
+
+globalID=requestAnimationFrame(animate);
+
+

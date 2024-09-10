@@ -47,12 +47,15 @@ class TerrainGenerator {
         MazeGenerator_1.default.Instance.DetermineSE();
         game.SetPlayer(new Player_1.default(game));
         new Background_1.Background(game, MazeGenerator_1.default.Instance.GetMapArr());
-        if (info.isFogged)
+        if (info.isFogged) {
             new Fog_1.default(game);
+            game.SetIsFogged(true);
+        }
         MonsterGenerator_1.default.Instance.Generate(game, info);
     }
-    AddDifficulty() {
-        this.mDifficulty++;
+    //export to outside class to set difficulty of the game
+    SetDifficulty(difficulty) {
+        this.mDifficulty = difficulty;
     }
     static get Instance() {
         if (!this._Instance)

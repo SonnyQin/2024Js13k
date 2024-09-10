@@ -46,3 +46,5 @@ if already in Escape state, ignore alert
         this.mAssets={"😃":79,"🥵":79,"🥶":79,"🥳":79,"😱":79,"😖":79};
 
 Treasure Monster on the End block
+
+Check for the lifespan

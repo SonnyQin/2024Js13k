@@ -1,18 +1,13 @@
 import {Actor} from "./Actors/Actor";
-import { Background } from "./Actors/Background/Background";
-import {data} from "browserslist";
 import InputManager from "./InputManager";
 import MessageDispatcher from "./AI/Message/MessageDispatcher";
 import Player from "./Actors/Player";
-import Clock from "./Actors/Monsters/Clock";
-import {Vector2} from "./Math";
-import HUD from "./UI/UIScreens/HUD";
-import MapGenerator from "./Map/MapGenerator";
-import MazeGenerator from "./Actors/Background/MazeGenerator";
 import Camera from "./Camera/Camera";
 import TerrainGenerator from "./Actors/Background/TerrainGenerator";
 import Fog from "./Camera/Fog";
-import Treasure from "./Actors/Monsters/Treasure";
+import LevelController, {GameResult} from "./LevelController";
+import SoundPlayer from "./Sound/SoundPlayer";
+
 export class Game
 {
     constructor()
@@ -24,34 +19,21 @@ export class Game
         this.mContext=null;
         //this.mInputManager=new InputManager();
 
-        this.mHUD=new HUD(this);
-
         this.mCamera=new Camera(this);
 
-        this.mResult=false;
+        this.mIsFogged=false;
     }
 
     public Initialize():void
     {
         this.mTickCount=Date.now();
 
-        let Canvas=document.createElement('canvas');
-        this.mCanvas=Canvas;
-        if(!Canvas)
-        {
-            console.log("Unable to create Canvas");
-            return;
-        }
-        this.mCanvasWidth=Canvas.width=window.innerWidth;
-        this.mCanvasHeight=Canvas.height=window.innerHeight;
-        document.body.appendChild(Canvas);
+        this.mCanvas=LevelController.Instance.mCanvas;
+        
+        this.mCanvasWidth=LevelController.Instance.mCanvasWidth;
+        this.mCanvasHeight=LevelController.Instance.mCanvasHeight;
         // @ts-ignore
-        this.mContext=Canvas.getContext('2d');
-        if(!this.mContext)
-        {
-            console.log("Unable to create Context");
-            return;
-        }
+        this.mContext=LevelController.Instance.mContext;
 
         TerrainGenerator.Instance.Generate(this);
 
@@ -95,8 +77,6 @@ export class Game
         MessageDispatcher.Instance.DispatchDelayedMessages();
 
         this.mCamera.Update();
-
-        this.mHUD.Update();
     }
     private GenerateOutput():void
     {
@@ -106,8 +86,16 @@ export class Game
         {
             iter.Draw(this.mContext);
         }
-        this.mHUD.Draw(this.mContext);
-        /*this.mFog.Update();*/
+        if(this.mIsFogged)
+            this.mFog.Update();
+        this.DrawLevel(this.mContext);
+    }
+
+    //Draw the level number on top right corner
+    public DrawLevel(ctx:CanvasRenderingContext2D)
+    {
+        let text="LEVEL "+LevelController.Instance.GetLevelNumber();
+        ctx.fillStyle
     }
     //Variables
     // @ts-ignore
@@ -125,12 +113,10 @@ export class Game
     //private mInputManager:InputManager;
     // @ts-ignore
     private mPlayer:Player;
-    private mHUD:HUD;
     private mCamera:Camera;
     // @ts-ignore
     private mFog:Fog;
-
-    private mResult:boolean;
+    private mIsFogged;
 
 //Functions about actors
     //TODO Optimization
@@ -187,16 +173,25 @@ export class Game
 
     public WIN()
     {
-        this.mResult=true;
+        LevelController.Instance.SetStatus(1);
+        LevelController.Instance.SetGameResult(GameResult.WIN);
+        SoundPlayer.Instance.Stop();
     }
 
     public LOSE()
     {
-        this.mResult=false;
+        LevelController.Instance.SetStatus(-1);
+        LevelController.Instance.SetGameResult(GameResult.LOSE);
+        SoundPlayer.Instance.Stop();
     }
 
     public SetPlayer(player:Player)
     {
         this.mPlayer=player;
+    }
+    
+    public SetIsFogged(fog:boolean)
+    {
+        this.mIsFogged=fog;
     }
 }

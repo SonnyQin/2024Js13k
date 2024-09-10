@@ -1,43 +1,44 @@
-//Always Draw at the lattest
-import {Game} from "../../Game";
+import { Game } from "../../Game";
 import Container from "../Containers/Container";
+import Button from "../Buttons/Button";
+import LevelController from "../../LevelController";
+import {Vector2} from "../../Math";
 
-export default class UIScreen
-{
-    constructor(game:Game)
-    {
-        this.mGame=game;
-        this.mStack=[];
+export default class UIScreen {
+    private mStack: Container[];
+
+    constructor() {
+        this.mStack = [];
+        this.initialize();
     }
 
-    public Update()
+    private initialize(): void
     {
-        if(this.mStack.length)
-            this.mStack[this.mStack.length-1].Update();
+        let containter=new Container(this);
+        let button=new Button(containter,new Vector2(100,100),100, 50, "Start");
+        containter.AddElement(button);
+        this.mStack.push(containter);
     }
 
-    public Draw(ctx:CanvasRenderingContext2D)
-    {
-        if(this.mStack.length)
-            this.mStack[this.mStack.length-1].Draw(ctx);
+    public Update(): void {
+        if (this.mStack.length) {
+            this.mStack[this.mStack.length - 1].Update();
+        }
     }
 
-    public AddContainer(container:Container)
-    {
+    public Draw(ctx: CanvasRenderingContext2D): void {
+        LevelController.Instance.mContext.beginPath();
+        LevelController.Instance.mContext.clearRect(0,0,LevelController.Instance.mCanvasWidth,LevelController.Instance.mCanvasWidth);
+        if (this.mStack.length) {
+            this.mStack[this.mStack.length - 1].Draw(ctx);
+        }
+    }
+
+    public AddContainer(container: Container): void {
         this.mStack.push(container);
     }
 
-    public RemoveContainer()
-    {
+    public RemoveContainer(): void {
         this.mStack.pop();
-    }
-
-    private mGame:Game;
-    //Always update the last element
-    private mStack:Container[];
-
-    public GetGame():Game
-    {
-        return this.mGame;
     }
 }

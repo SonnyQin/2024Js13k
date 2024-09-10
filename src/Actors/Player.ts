@@ -49,6 +49,8 @@ export default class Player extends Sprite
 
     public ProcessInput(keyState:InputManager):void
     {
+        if(keyState.keysDown['t'])
+            this.SetPosition(MazeGenerator.Instance.GetLocation(MazeGenerator.Instance.GetEndPos()));
         if(keyState.leftbutton)
             this.mActive=true;
         if(this.mActive)
@@ -57,7 +59,7 @@ export default class Player extends Sprite
     public Update(deltaTime: number)
     {
         super.Update(deltaTime);
-        //console.log(this.GetPosition());
+        //console.log(this.GetFSM().GetCurrentState());
         this.mStateMachine.Update();
         if(MazeGenerator.Instance.GetWinZone().Inside(this.GetPosition()))
         {
@@ -67,12 +69,13 @@ export default class Player extends Sprite
 
     public Draw(context: CanvasRenderingContext2D)
     {
-        let b=context.measureText(this.mSelectImage);
-        this.DrawImage(context, this.mSelectImage, paras.PlayerSize);
+        /*let b=context.measureText(this.mSelectImage);*/
+        this.DrawImage(context, this.mSelectImage, paras.PlayerSize, paras.offsetx, paras.offsety);
         let pos=this.TransformToView();
-        context.arc(pos.x, pos.y, paras.PlayerCollisionSize,0,2*Math.PI);
+/*        context.arc(pos.x, pos.y, paras.PlayerCollisionSize,0,2*Math.PI);
         context.stroke();
-        context.closePath();
+        context.closePath();*/
+        //context.stroke()
     }
     
     public HandleMessage(telegram: Telegram): boolean

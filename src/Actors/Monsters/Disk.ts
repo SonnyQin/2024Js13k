@@ -2,7 +2,7 @@ import MonsterBase from "./MonsterBase";
 import {Game} from "../../Game";
 import {Vector2} from "../../Math";
 
-export default class Treasure extends MonsterBase
+export default class Disk extends MonsterBase
 {
     constructor(game:Game,drawOrder:number=1, pos:Vector2,scale:number, isEvil:boolean)
     {

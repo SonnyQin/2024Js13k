@@ -46,19 +46,20 @@ class PlayerGlobalState extends State_1.default {
             case MessageType_1.MessageType.PM_ALERT:
                 owner.AddPursuit(msg.mSender);
                 //If already in EScape state, Ignore Alert
-                if (!owner.GetFSM().isInState(PSEscape.Instance))
+                if (!owner.GetFSM().isInState(PSEscape.Instance) && !owner.GetFSM().isInState(PSTired.Instance))
                     if (!Check(owner))
                         CChangeState(owner, PSAlert.Instance);
                 return true;
             case MessageType_1.MessageType.PM_ESCAPE:
                 owner.AddPursuit(msg.mSender);
-                if (!Check(owner))
+                if (!Check(owner) && !owner.GetFSM().isInState(PSTired.Instance))
                     CChangeState(owner, PSEscape.Instance);
                 return true;
             case MessageType_1.MessageType.PM_WIN:
                 if (!Check(owner))
                     CChangeState(owner, PSWIN.Instance);
-                MessageDispatcher_1.default.Instance.DispatchMsg(3000, owner, owner, MessageType_1.MessageType.GAMELOSE);
+                //TODO Set the song to play once and clear all other sound
+                MessageDispatcher_1.default.Instance.DispatchMsg(3000, owner, owner, MessageType_1.MessageType.GAMEWIN);
                 return true;
             case MessageType_1.MessageType.PM_LOSE:
                 if (!Check(owner))
@@ -116,6 +117,7 @@ class PSNormal extends State_1.default {
         owner.SetMaxSpeed(Parameters_1.paras.PlayerNormalSpeed);
         console.log("Enter");
         SoundPlayer_1.default.Instance.SetSound(S_Normal_1.S_Normal);
+        SoundPlayer_1.default.Instance.SetRepeat(true);
         SoundPlayer_1.default.Instance.Play();
     }
     Execute(owner) {
@@ -138,6 +140,7 @@ class PSAlert extends State_1.default {
     Enter(owner) {
         owner.SetSelectImage('😨');
         owner.SetMaxSpeed(Parameters_1.paras.PlayerReliefSpeed);
+        SoundPlayer_1.default.Instance.SetRepeat(true);
     }
     Execute(owner) {
         owner.AddTiredness(Parameters_1.paras.FearTiredness);
@@ -159,6 +162,7 @@ class PSEscape extends State_1.default {
         owner.SetSelectImage('😱');
         owner.SetMaxSpeed(Parameters_1.paras.PlayerEscapeSpeed);
         SoundPlayer_1.default.Instance.SetSound(S_Escape_1.S_Escape);
+        SoundPlayer_1.default.Instance.SetRepeat(true);
         SoundPlayer_1.default.Instance.Play();
     }
     Execute(owner) {
@@ -179,8 +183,10 @@ class PSTired extends State_1.default {
         return this._Instance;
     }
     Enter(owner) {
+        console.log("ddqwdq");
         owner.SetSelectImage('🥵');
         owner.SetMaxSpeed(Parameters_1.paras.PlayerTiredSpeed);
+        SoundPlayer_1.default.Instance.SetRepeat(true);
     }
     Execute(owner) {
         if (owner.IsPursuited())
@@ -202,6 +208,7 @@ class PSRelief extends State_1.default {
     Enter(owner) {
         owner.SetSelectImage('🥶');
         owner.SetMaxSpeed(Parameters_1.paras.PlayerReliefSpeed);
+        SoundPlayer_1.default.Instance.SetRepeat(true);
     }
     Execute(owner) {
         owner.AddTiredness(Parameters_1.paras.RecoverTiredness);
@@ -221,6 +228,7 @@ class PSWIN extends State_1.default {
         owner.SetSelectImage('🥳');
         owner.SetMaxSpeed(Parameters_1.paras.PlayerNormalSpeed);
         SoundPlayer_1.default.Instance.SetSound(S_Win_1.S_Win);
+        SoundPlayer_1.default.Instance.SetRepeat(false);
         SoundPlayer_1.default.Instance.Play();
     }
     Exit(owner) {
@@ -240,6 +248,7 @@ class PSLOSE extends State_1.default {
     Enter(owner) {
         owner.SetSelectImage('😭');
         owner.SetMaxSpeed(Parameters_1.paras.PlayerNormalSpeed);
+        SoundPlayer_1.default.Instance.SetRepeat(false);
     }
 }
 exports.PSLOSE = PSLOSE;

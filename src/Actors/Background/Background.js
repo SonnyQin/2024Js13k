@@ -8,6 +8,9 @@ const Actor_1 = require("../Actor");
 const Sprite_1 = __importDefault(require("../Sprite"));
 const Math_1 = require("../../Math");
 const Parameters_1 = require("../../Parameters");
+const LevelController_1 = __importDefault(require("../../LevelController"));
+//TODO Sequence may change
+let Colors = ["#8B0000", "#4B0082", "#006400"];
 //Defined as the most deep layer of the drawing, it will cover all the background of the game,
 //and other layer of background, such as obstacles, decoration will be implemented as a sprite
 class Background extends Sprite_1.default {
@@ -15,6 +18,7 @@ class Background extends Sprite_1.default {
         super(game, -1, new Math_1.Vector2(0, 0));
         this.mMap = map;
         this.SetType(Actor_1.Type.Terrain);
+        this.mSelectColor = Colors[LevelController_1.default.Instance.GetLevelNumber()];
     }
     UpdateActor(deltatime) {
         //this.count++;
@@ -31,7 +35,7 @@ class Background extends Sprite_1.default {
                         ctx.fillStyle = 'grey';
                         break;
                     case 1:
-                        ctx.fillStyle = '#DC143C';
+                        ctx.fillStyle = this.mSelectColor;
                         break;
                     case 3:
                         ctx.fillStyle = '#E3EDCD';

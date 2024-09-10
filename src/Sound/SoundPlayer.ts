@@ -1,7 +1,10 @@
 import { CPlayer } from "./SoundBox";
 
 export default class SoundPlayer {
-    constructor() {}
+    constructor()
+    {
+        this.mIsRepeat=false;
+    }
 
     public Play() {
         // @ts-ignore
@@ -18,7 +21,10 @@ export default class SoundPlayer {
         const wave = this.mPlayer.createWave(); // Get generated wave data
         this.mAudio = document.createElement("audio");
         this.mAudio.src = URL.createObjectURL(new Blob([wave], { type: "audio/wav" }));
-        this.mAudio.loop = true; // Set the audio to loop
+        if(this.mIsRepeat)
+            this.mAudio.loop = true; // Set the audio to loop
+        else
+            this.mAudio.loop=false;
         this.mAudio.play(); // Play the audio
     }
 
@@ -37,6 +43,12 @@ export default class SoundPlayer {
     private mSelectSound: any;
     // @ts-ignore
     private mAudio: HTMLAudioElement;
+    private mIsRepeat:boolean;
+
+    public SetRepeat(repeat:boolean)
+    {
+        this.mIsRepeat=repeat;
+    }
 
     static get Instance() {
         if (!this._Instance)

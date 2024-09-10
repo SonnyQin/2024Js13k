@@ -66,15 +66,15 @@ export default class MonsterBase extends Sprite
 
     public Draw(context: CanvasRenderingContext2D)
     {
-        super.Draw(context);
+        super.Draw(context, paras.MonsterOffsetx, paras.MonsterOffsety);
         if(this.mIsEvil&&this.mStateMachine.GetCurrentState()!=MSHiding.Instance)
         {
             this.DrawThirteen(context, this.mOffset);
         }
 
-        let pos=this.GetGame().GetCamera().TransformToView(this.GetPosition());
+        /*let pos=this.GetGame().GetCamera().TransformToView(this.GetPosition());
         context.arc(pos.x, pos.y, paras.MonsterCollisionSize,0,2*Math.PI);
-        context.stroke();
+        context.stroke();*/
     }
 
     //TODO May add some gradually appear and gradually disappear effect
@@ -84,7 +84,7 @@ export default class MonsterBase extends Sprite
         ctx.font="20px Georgia"
         let pos=this.TransformToView();
         ctx.fillText("13",pos.x+offset.x, pos.y+offset.y);
-        ctx.stroke();
+        //ctx.stroke();
     }
 
     public HandleMessage(telegram: Telegram): boolean

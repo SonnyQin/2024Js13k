@@ -14,7 +14,7 @@ export default class Sprite extends Actor
         this.mScale=scale;
     }
 
-    public DrawImage(context:CanvasRenderingContext2D,image:string, size:number):void
+    public DrawImage(context:CanvasRenderingContext2D,image:string, size:number, offsetx=0, offsety=0):void
     {
         context.font = size + 'px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", "Twemoji"';
         // 设置文本对齐方式
@@ -30,24 +30,25 @@ export default class Sprite extends Actor
         if(this.GetType()==Type.Monster&&(this as MonsterBase).GetActive())
             context.globalAlpha=0.85;
 
-        context.fillText(image,pos.x,pos.y);
-        context.moveTo(0,0);
-        context.stroke();
+        context.fillText(image,pos.x+offsetx,pos.y+offsety);
+/*        context.moveTo(0,0);
+        context.stroke();*/
 
         context.globalAlpha=1;
+        //context.lineTo()
         /*context.restore();*/
     }
 
     //Use the first image of assets to draw in default
     //If the sprite has extra image, implemented in the derived class(hard code)
-    Draw(context: CanvasRenderingContext2D)
+    Draw(context: CanvasRenderingContext2D, offsetx=0, offsety=0)
     {
         if(Object.keys(this.mAssets).length==1)
         {
             let image=Object.keys(this.mAssets)[0];
             // @ts-ignore
             let size=this.mAssets[image]*this.mScale;
-            this.DrawImage(context,image,size);
+            this.DrawImage(context,image,size, offsetx, offsety);
         }
     }
 
