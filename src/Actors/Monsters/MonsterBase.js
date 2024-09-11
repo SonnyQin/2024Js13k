@@ -60,6 +60,7 @@ class MonsterBase extends Sprite_1.default {
         if (this.mStateMachine.isInState(MonsterStates_1.MSPursuiting.Instance) && Date.now() - this.mBornTime > Parameters_1.paras.MonsterLifeSpan) {
             console.log("Dead");
             this.GetGame().RemoveActor(this);
+            this.GetGame().GetPlayer().RemovePursuit(this);
         }
     }
     Update(deltaTime) {

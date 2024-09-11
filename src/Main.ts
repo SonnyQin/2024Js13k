@@ -2,7 +2,12 @@ import {Game} from "./Game";
 import {Sleep} from "./Math";
 import InputManager from "./InputManager";
 import LevelController from "./LevelController";
+import SoundManager from "./Sound/SoundManager";
+
 LevelController.Instance;
+
+//Load Sound
+SoundManager.Instance;
 
 var globalID;
 function animate()
@@ -14,5 +19,4 @@ function animate()
 }
 
 globalID=requestAnimationFrame(animate);
-
 

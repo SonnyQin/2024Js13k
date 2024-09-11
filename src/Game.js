@@ -31,8 +31,8 @@ const InputManager_1 = __importDefault(require("./InputManager"));
 const MessageDispatcher_1 = __importDefault(require("./AI/Message/MessageDispatcher"));
 const Camera_1 = __importDefault(require("./Camera/Camera"));
 const LevelController_1 = __importStar(require("./LevelController"));
-const SoundPlayer_1 = __importDefault(require("./Sound/SoundPlayer"));
 const Parameters_1 = require("./Parameters");
+const SoundManager_1 = __importDefault(require("./Sound/SoundManager"));
 class Game {
     constructor() {
         this.mIsRunning = true;
@@ -136,13 +136,13 @@ class Game {
     WIN() {
         LevelController_1.default.Instance.SetStatus(1);
         LevelController_1.default.Instance.SetGameResult(LevelController_1.GameResult.WIN);
-        SoundPlayer_1.default.Instance.Stop();
+        SoundManager_1.default.Instance.StopAll();
         MessageDispatcher_1.default.Instance.Clear();
     }
     LOSE() {
         LevelController_1.default.Instance.SetStatus(-1);
         LevelController_1.default.Instance.SetGameResult(LevelController_1.GameResult.LOSE);
-        SoundPlayer_1.default.Instance.Stop();
+        SoundManager_1.default.Instance.StopAll();
         MessageDispatcher_1.default.Instance.Clear();
     }
     SetPlayer(player) {

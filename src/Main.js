@@ -4,7 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const LevelController_1 = __importDefault(require("./LevelController"));
+const SoundManager_1 = __importDefault(require("./Sound/SoundManager"));
 LevelController_1.default.Instance;
+//Load Sound
+SoundManager_1.default.Instance;
 var globalID;
 function animate() {
     LevelController_1.default.Instance.Update();

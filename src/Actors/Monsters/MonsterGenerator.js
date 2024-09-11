@@ -34,6 +34,9 @@ class MonsterGenerator {
                 this.mMonsterMap[i][j] = false;
             }
         }
+        let pos = MazeGenerator_1.default.Instance.GetStartPos();
+        //Make sure start pos has no monsters
+        this.mMonsterMap[pos.x][pos.y] = true;
     }
     RandomOffset() {
         return (0, Math_1.Random)(-Parameters_1.paras.blocklength, Parameters_1.paras.blocklength / 2);

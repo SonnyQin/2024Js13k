@@ -10,8 +10,8 @@ const MessageType_1 = require("../AI/Message/MessageType");
 class SenseComponent extends Component_1.Component {
     constructor(actor, updateOrder = 100) {
         super(actor, updateOrder);
-        this.mAlertDis = 500;
-        this.mDangerDis = 300;
+        this.mAlertDis = 800;
+        this.mDangerDis = 350;
     }
     Update(deltaTime) {
         super.Update(deltaTime);

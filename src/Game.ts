@@ -10,6 +10,7 @@ import SoundPlayer from "./Sound/SoundPlayer";
 import {paras} from "./Parameters";
 import Clock from "./Actors/Monsters/Clock";
 import { Vector2 } from "./Math";
+import SoundManager from "./Sound/SoundManager";
 
 export class Game
 {
@@ -178,7 +179,7 @@ export class Game
     {
         LevelController.Instance.SetStatus(1);
         LevelController.Instance.SetGameResult(GameResult.WIN);
-        SoundPlayer.Instance.Stop();
+        SoundManager.Instance.StopAll();
         MessageDispatcher.Instance.Clear();
     }
 
@@ -186,7 +187,7 @@ export class Game
     {
         LevelController.Instance.SetStatus(-1);
         LevelController.Instance.SetGameResult(GameResult.LOSE);
-        SoundPlayer.Instance.Stop();
+        SoundManager.Instance.StopAll();
         MessageDispatcher.Instance.Clear();
     }
 

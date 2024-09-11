@@ -38,6 +38,9 @@ export default class MonsterGenerator
                 this.mMonsterMap[i][j] = false;
             }
         }
+        let pos=MazeGenerator.Instance.GetStartPos();
+        //Make sure start pos has no monsters
+        this.mMonsterMap[pos.x][pos.y]=true;
     }
 
     private RandomOffset():number

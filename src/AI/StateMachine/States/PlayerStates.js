@@ -8,15 +8,10 @@ const State_1 = __importDefault(require("./State"));
 const MessageType_1 = require("../../Message/MessageType");
 const Parameters_1 = require("../../../Parameters");
 const MessageDispatcher_1 = __importDefault(require("../../Message/MessageDispatcher"));
-const S_Normal_1 = require("../../../Sound/Songs/S_Normal");
-const SoundPlayer_1 = __importDefault(require("../../../Sound/SoundPlayer"));
-const S_Win_1 = require("../../../Sound/Songs/S_Win");
-const S_Escape_1 = require("../../../Sound/Songs/S_Escape");
-const S_Lose_1 = require("../../../Sound/Songs/S_Lose");
-const S_Relief_1 = require("../../../Sound/Songs/S_Relief");
+const SoundManager_1 = __importDefault(require("../../../Sound/SoundManager"));
 /*import SoundPlayer from "../../../Sound/SoundPlayer";*/
 function CChangeState(owner, newState) {
-    if (!owner.GetFSM().isInState(newState))
+    if (!owner.GetFSM().isInState(newState) && !owner.GetFSM().isInState(PSWIN.Instance) && !owner.GetFSM().isInState(PSLOSE.Instance))
         owner.GetFSM().ChangeState(newState);
 }
 function Check(owner) {
@@ -117,15 +112,13 @@ class PSNormal extends State_1.default {
         super.Enter(owner);
         owner.SetSelectImage('😃');
         owner.SetMaxSpeed(Parameters_1.paras.PlayerNormalSpeed);
-        SoundPlayer_1.default.Instance.SetSound(S_Normal_1.S_Normal);
-        SoundPlayer_1.default.Instance.SetRepeat(true);
-        SoundPlayer_1.default.Instance.Play();
+        SoundManager_1.default.Instance.Play('S_Normal');
     }
     Execute(owner) {
         owner.AddTiredness(Parameters_1.paras.RecoverTiredness);
     }
     Exit(owner) {
-        SoundPlayer_1.default.Instance.Stop();
+        SoundManager_1.default.Instance.Stop('S_Normal');
     }
 }
 exports.PSNormal = PSNormal;
@@ -141,12 +134,13 @@ class PSAlert extends State_1.default {
     Enter(owner) {
         owner.SetSelectImage('😨');
         owner.SetMaxSpeed(Parameters_1.paras.PlayerReliefSpeed);
-        SoundPlayer_1.default.Instance.SetRepeat(true);
+        SoundManager_1.default.Instance.Play('S_Alert');
     }
     Execute(owner) {
         owner.AddTiredness(Parameters_1.paras.FearTiredness);
     }
     Exit(owner) {
+        SoundManager_1.default.Instance.Stop('S_Alert');
     }
 }
 exports.PSAlert = PSAlert;
@@ -162,15 +156,13 @@ class PSEscape extends State_1.default {
     Enter(owner) {
         owner.SetSelectImage('😱');
         owner.SetMaxSpeed(Parameters_1.paras.PlayerEscapeSpeed);
-        SoundPlayer_1.default.Instance.SetSound(S_Escape_1.S_Escape);
-        SoundPlayer_1.default.Instance.SetRepeat(true);
-        SoundPlayer_1.default.Instance.Play();
+        SoundManager_1.default.Instance.Play('S_Escape');
     }
     Execute(owner) {
         owner.AddTiredness(Parameters_1.paras.EscapeTiredness);
     }
     Exit(owner) {
-        SoundPlayer_1.default.Instance.Stop();
+        SoundManager_1.default.Instance.Stop('S_Escape');
     }
 }
 exports.PSEscape = PSEscape;
@@ -186,13 +178,16 @@ class PSTired extends State_1.default {
     Enter(owner) {
         owner.SetSelectImage('🥵');
         owner.SetMaxSpeed(Parameters_1.paras.PlayerTiredSpeed);
-        SoundPlayer_1.default.Instance.SetRepeat(true);
+        SoundManager_1.default.Instance.Play('S_Tired');
     }
     Execute(owner) {
         if (owner.IsPursuited())
             owner.AddTiredness(Parameters_1.paras.TiredTiredness);
         else
             owner.AddTiredness(Parameters_1.paras.RecoverTiredness);
+    }
+    Exit(owner) {
+        SoundManager_1.default.Instance.Stop('S_Tired');
     }
 }
 exports.PSTired = PSTired;
@@ -208,15 +203,13 @@ class PSRelief extends State_1.default {
     Enter(owner) {
         owner.SetSelectImage('🥶');
         owner.SetMaxSpeed(Parameters_1.paras.PlayerReliefSpeed);
-        SoundPlayer_1.default.Instance.SetSound(S_Relief_1.S_Relief);
-        SoundPlayer_1.default.Instance.SetRepeat(true);
-        SoundPlayer_1.default.Instance.Play();
+        SoundManager_1.default.Instance.Play('S_Relief');
     }
     Execute(owner) {
         owner.AddTiredness(Parameters_1.paras.RecoverTiredness);
     }
     Exit(owner) {
-        SoundPlayer_1.default.Instance.Stop();
+        SoundManager_1.default.Instance.Stop('S_Relief');
     }
 }
 exports.PSRelief = PSRelief;
@@ -232,12 +225,10 @@ class PSWIN extends State_1.default {
     Enter(owner) {
         owner.SetSelectImage('🥳');
         owner.SetMaxSpeed(Parameters_1.paras.PlayerNormalSpeed);
-        SoundPlayer_1.default.Instance.SetSound(S_Win_1.S_Win);
-        SoundPlayer_1.default.Instance.SetRepeat(false);
-        SoundPlayer_1.default.Instance.Play();
+        SoundManager_1.default.Instance.Play('S_Win');
     }
     Exit(owner) {
-        SoundPlayer_1.default.Instance.Stop();
+        SoundManager_1.default.Instance.Stop('S_Win');
     }
 }
 exports.PSWIN = PSWIN;
@@ -253,12 +244,10 @@ class PSLOSE extends State_1.default {
     Enter(owner) {
         owner.SetSelectImage('😭');
         owner.SetMaxSpeed(Parameters_1.paras.PlayerNormalSpeed);
-        SoundPlayer_1.default.Instance.SetSound(S_Lose_1.S_Lose);
-        SoundPlayer_1.default.Instance.SetRepeat(false);
-        SoundPlayer_1.default.Instance.Play();
+        SoundManager_1.default.Instance.Play('S_Lose');
     }
     Exit(owner) {
-        SoundPlayer_1.default.Instance.Stop();
+        SoundManager_1.default.Instance.Stop('S_Lose');
     }
 }
 exports.PSLOSE = PSLOSE;

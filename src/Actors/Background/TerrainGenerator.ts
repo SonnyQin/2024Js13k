@@ -18,21 +18,21 @@ export enum Difficulty
 export let DifficultyInfo=
     {
         0:{
-            numOfObjects:10,
+            numOfObjects:30,
             numOfMonsters:10,
             mapSize:10,
             isFogged:false,
         },
         1:{
-            numOfObjects:20,
-            numOfMonsters:15,
-            mapSize: 20,
+            numOfObjects:50,
+            numOfMonsters:25,
+            mapSize: 15,
             isFogged: true,
         },
         2:{
-            numOfObjects:40,
-            numOfMonsters:35,
-            mapSize:40,
+            numOfObjects:70,
+            numOfMonsters:39,
+            mapSize:25,
             isFogged:true,
         }
 }

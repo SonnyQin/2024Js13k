@@ -10,8 +10,8 @@ export default class SenseComponent extends Component
     constructor(actor:Player, updateOrder:number=100)
     {
         super(actor, updateOrder);
-        this.mAlertDis=500;
-        this.mDangerDis=300;
+        this.mAlertDis=800;
+        this.mDangerDis=350;
     }
 
     Update(deltaTime: number)

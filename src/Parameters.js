@@ -15,9 +15,9 @@ exports.paras = {
     "ClockSize": 97,
     "MonsterCollisionSize": 50, //Due to the blank in emojis
     "PlayerCollisionSize": 66,
-    "MonsterMaxForce": 600,
+    "MonsterMaxForce": 700,
     "MonsterMass": 2,
-    "MonsterMaxSpeed": 300,
+    "MonsterMaxSpeed": 400,
     "MapR": 20,
     "MapC": 20,
     "POVLength": 303,
@@ -39,5 +39,6 @@ exports.paras = {
     //offset corresponding to the top right corner of canvas coordinate
     "UIx": 100,
     "UIy": 100,
+    "ButtonOffset": 100,
 };
 //# sourceMappingURL=Parameters.js.map

@@ -43,6 +43,7 @@ export default class MonsterBase extends Sprite
         {
             console.log("Dead");
             this.GetGame().RemoveActor(this);
+            this.GetGame().GetPlayer().RemovePursuit(this);
         }
     }
 
